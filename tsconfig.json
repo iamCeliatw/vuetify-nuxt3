@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es5",  
+    // "module": "commonjs", 
+    "strict": true,  
+    "esModuleInterop": true,  
+    "skipLibCheck": true,         
+    "forceConsistentCasingInFileNames": true,
+  },
+      
+  "extends": "./.nuxt/tsconfig.json", // 讀得到 ref 
+  "include": [ // 納入 .vue 文件
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "env.d.ts",
+    ".nuxt/nuxt.d.ts", // 讀得到 ref
+    "**/*" // 讀得到 ref
+  ],
+  "exclude": [ // 指定排除的文件
+  "node_modules"
+  ]
+}
