@@ -1,11 +1,15 @@
 <template lang="pug">
 .testt 
-  h1 1123
+  h1
+  button(@click="send")
 </template>
 
 <script setup lang="ts">
-import {useCounterStore} from "../store/index"
-const store = useCounterStore()
+import { indexStore } from "../store/index"
+
+onMounted(() => {
+
+})
 
 </script>
 

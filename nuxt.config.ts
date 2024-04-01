@@ -1,6 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      serverUrl: process.env.NUXT_SUPABASE_URL,
+      clientUrl: process.env.NUXT_SUPABASE_KEY,
+    },
+  },
+  
   devtools: { enabled: true },
   build: {
     transpile: ['vuetify'],
@@ -12,7 +19,7 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    '@pinia/nuxt',
+    '@pinia/nuxt', '@nuxtjs/supabase',
   ],
   vite: {
     vue: {
@@ -29,5 +36,13 @@ export default defineNuxtConfig({
       },
     },
   },
-  // plugins: ['~/plugins/firebase.client.ts']
+  supabase:{
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirm',
+      // include: ['/admin'],
+      exclude: ['/','/admin(/*)?','/test'],
+      cookieRedirect: false,
+    }
+  },
 })
