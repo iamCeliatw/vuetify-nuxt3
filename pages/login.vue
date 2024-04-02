@@ -8,6 +8,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+const router = useRouter()
 const supabase = useSupabaseClient()
 const email = ref('')
 const password = ref('')
@@ -16,40 +17,15 @@ const signInWithEmail = async () => {
   email: email.value,
   password: password.value,
 })
+  if(data)
   console.log(data);
+  if (data?.user) router.push('/admin');
   if (error) console.log(error)
 }
-let selectedFile: Ref<File | null> = ref(null);
-
-
-//上傳圖片
-const handleFileUpload =async (event: any) => {
-  selectedFile.value = event.target.files[0]
-  if(!selectedFile.value) return
-  console.log(event.target.files[0])
-  const { data, error } = await supabase
-  .storage
-  .from('test')
-  .upload('avatar1.png', selectedFile.value, {
-    cacheControl: '3600',
-    upsert: false
-  })
-  if (error) console.log(error)
-}
-
-// 下載圖片
-const { data, error } = await supabase.storage.from('public').download('test/avatar1.png')
-if (error) {
-  console.log('Error downloading file: ', error.message)
-} else if (data) {
-  if(process.client){
-    const url = URL.createObjectURL(data)
-    const img = document.createElement('img')
-    img.src = url
-    document.body.appendChild(img)
-  }
-}
-
+onMounted(async () => {
+  const user = await supabase.auth.getUser()
+  if (user) router.push('/admin') 
+})
 </script>
 
 <style lang="sass" scoped>
