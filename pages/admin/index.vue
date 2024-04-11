@@ -14,7 +14,9 @@ async function getCountries() {
   countries.value = data
   console.log(countries.value);
 }
-
+definePageMeta({
+  middleware: 'auth'
+});
 onMounted(() => {
   getCountries()
 })

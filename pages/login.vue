@@ -1,9 +1,10 @@
 <template lang="pug">
-.flex__container
-  input(v-model="email" type="email")
-  input(v-model="password" type="password")
-  input(type="file" @change="handleFileUpload($event)")
-  button.custom(@click="signInWithEmail") Sign In with E-Mail
+.login__wrapper
+  .login__container
+    .login__form
+      input(v-model="email" type="email")
+      input(v-model="password" type="password")
+      button.custom(@click="signInWithEmail") Sign In with E-Mail
 </template>
 
 <script setup lang="ts">
@@ -29,13 +30,32 @@ onMounted(async () => {
 </script>
 
 <style lang="sass" scoped>
-.flex__container
-  width: 50%
+.login__wrapper
+  width: 100%
+  height: 100%
+  min-height: 100vh
+  position: relative
+.login__container
+  margin: auto
+  // border: 1px solid red
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+.login__form
   display: flex
-  gap: 10px
   flex-direction: column
-.custom
-  border: 1px solid red
-input
-  border: 1px dashed green
+  gap: 10px
+  input
+    padding: 10px
+    border: 1px solid #ccc
+    border-radius: 5px
+  button
+    padding: 10px
+    border: 1px solid #ccc
+    border-radius: 5px
+    background-color: #ccc
+    cursor: pointer
+    &:hover
+      background-color: #aaa
 </style>

@@ -34,6 +34,7 @@ const handleFileUpload =async (event: any) => {
     cacheControl: '3600',
     upsert: false
   })
+  console.log(data,"data");
   if (error) console.log(error)
 }
 
@@ -42,6 +43,7 @@ const { data, error } = await supabase.storage.from('public').download('test/ava
 if (error) {
   console.log('Error downloading file: ', error.message)
 } else if (data) {
+  console.log(data,"data");
   if(process.client){
     const url = URL.createObjectURL(data)
     const img = document.createElement('img')
