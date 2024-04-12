@@ -4,7 +4,7 @@ QuillEditor(theme="snow",
   v-model:content="content"
   ref="myQuillEditor",
   contentType="html",
-  :options="data.editorOption",
+  :options="data.editorOption"
   )
 p {{ content }}
 </template>
@@ -41,7 +41,8 @@ const data = reactive({
 //為防止server端渲染時，找不到window對象，所以需要在client端渲染
 const QuillEditor = defineAsyncComponent(() => import('@vueup/vue-quill').then(module => module.QuillEditor));
 
-const setValue = () => {
+const setValue = async() => {
+  await nextTick()
   emit('updateValue', content.value)
 }
 

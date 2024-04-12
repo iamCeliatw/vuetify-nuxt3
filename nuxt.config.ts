@@ -36,6 +36,11 @@ export default defineNuxtConfig({
       },
     },
   },
+  app: {
+    head: {
+      title: 'supabase-nuxt',
+    },
+  },
   supabase:{
     redirectOptions: {
       login: '/login',

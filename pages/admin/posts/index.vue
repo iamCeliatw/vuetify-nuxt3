@@ -29,6 +29,7 @@ const supabase = useSupabaseClient()
 //ssr get data
 const { data: articleList, pending, error, refresh } = useAsyncData('articles', async () => {
   const { data, error } = await supabase.from('articles').select();
+  console.log(articleList,"articleList");
   if (error) throw new Error('Failed to fetch articles');
   return data;
 });
