@@ -7,12 +7,19 @@ ClientOnly
   
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { useCounterStore } from "../../store/index"
-const store = useCounterStore()
-
-const email = ref('');
-const password = ref('');
-
+const countries = ref<any[] | null>([])
+const supabase = useSupabaseClient()
+async function getCountries() {
+  const { data } = await supabase.from('user').select()
+  countries.value = data
+  console.log(countries.value);
+}
+definePageMeta({
+  middleware: 'auth'
+});
+onMounted(() => {
+  getCountries()
+})
 </script>
 
 <style lang="sass" scoped>
