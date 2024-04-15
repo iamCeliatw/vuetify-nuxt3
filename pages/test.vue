@@ -1,36 +1,23 @@
 <template lang="pug">
 .flex__container
-  input(v-model="email" type="email")
-  input(v-model="password" type="password")
   input(type="file" @change="handleFileUpload($event)")
-  button.custom(@click="signInWithEmail") Sign In with E-Mail
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 const supabase = useSupabaseClient()
-const email = ref('')
-const password = ref('')
-const signInWithEmail = async () => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-  email: email.value,
-  password: password.value,
-})
-  console.log(data);
-  if (error) console.log(error)
-}
-let selectedFile: Ref<File | null> = ref(null);
 
+let selectedFile: Ref<File | null> = ref(null);
 
 //上傳圖片
 const handleFileUpload =async (event: any) => {
   selectedFile.value = event.target.files[0]
   if(!selectedFile.value) return
-  console.log(event.target.files[0])
+  console.log(event.target.files[0].name)
   const { data, error } = await supabase
   .storage
   .from('test')
-  .upload('avatar1.png', selectedFile.value, {
+  .upload(`${event.target.files[0].name}`, selectedFile.value, {
     cacheControl: '3600',
     upsert: false
   })
@@ -38,18 +25,22 @@ const handleFileUpload =async (event: any) => {
   if (error) console.log(error)
 }
 
-// 下載圖片
-const { data, error } = await supabase.storage.from('public').download('test/avatar1.png')
+//取得所有檔案的url
+const { data, error } = await supabase.storage
+  .from('test')
+  .list();
+
 if (error) {
-  console.log('Error downloading file: ', error.message)
-} else if (data) {
-  console.log(data,"data");
-  if(process.client){
-    const url = URL.createObjectURL(data)
-    const img = document.createElement('img')
-    img.src = url
-    document.body.appendChild(img)
-  }
+  console.log('Error listing files:', error.message);
+}
+
+if(data?.length){
+  data.forEach(async(file) => {
+    const { data: fileData} = supabase.storage.from('test').getPublicUrl(file.name);
+if (fileData) {
+      console.log(fileData, "Downloaded data");
+    }
+  });
 }
 
 </script>
