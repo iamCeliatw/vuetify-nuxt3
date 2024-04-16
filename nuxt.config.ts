@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
+  css: ["@/assets/main.sass"],
   runtimeConfig: {
     public: {
       serverUrl: process.env.NUXT_SUPABASE_URL,
@@ -28,13 +29,13 @@ export default defineNuxtConfig({
       },
       
     },
-    css: {
-      preprocessorOptions: {
-        sass: {
-          additionalData: `@import "@/assets/main.sass"`,
-        },
-      },
-    },
+    // css: {
+    //   preprocessorOptions: {
+    //     sass: {
+    //       additionalData: `@import "@/assets/main.sass"`,
+    //     },
+    //   },
+    // },
   },
   app: {
     head: {

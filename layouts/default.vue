@@ -9,11 +9,11 @@ v-layout.rounded.rounded-md
   v-navigation-drawer
     v-list-item.list-item(title="My playground" subtitle="dashboard")
     v-divider
-    v-list-item.list-item(@click="() => router.push('/admin/posts')" title="post")
-    v-list-item.list-item(@click="() => router.push('/admin/category')" title="category")
-    v-list-item.list-item(@click="() => router.push('/admin/images')" title="images")
-    v-list-item.list-item(@click="() => router.push('/admin/posts')" title="account")
-    v-list-item.list-item(@click="() => router.push('/admin')" title="setting")
+    v-list-item.list-item.my-2(@click="() => router.push('/admin/posts')" title="post")
+    v-list-item.list-item.my-2(@click="() => router.push('/admin/category')" title="category")
+    v-list-item.list-item.my-2(@click="() => router.push('/admin/images')" title="images")
+    //- v-list-item.list-item(@click="() => router.push('/admin/posts')" title="account")
+    //- v-list-item.list-item(@click="() => router.push('/admin')" title="setting")
   v-main
     slot
 </template>
@@ -37,8 +37,6 @@ img
   width: 25px
   height: 25px
 .list-item
-  margin: 8px 20px
+  // margin: 8px 20px
 
-.v-main
-  margin: 67px 0 0 255px
 </style>

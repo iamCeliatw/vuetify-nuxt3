@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@giscus/vue": "^3.0.0",
     "@mdi/font": "^7.4.47",
     "@nuxtjs/supabase": "^1.2.0",
     "@pinia/nuxt": "^0.5.1",

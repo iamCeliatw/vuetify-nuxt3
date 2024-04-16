@@ -1,17 +1,21 @@
 <template lang="pug">
 ClientOnly
   NuxtLayout
-    v-card(title="Articles", flat)
+    v-card.h-auto(title="Articles", flat)
       .button__container
         v-btn(color="primary", @click="addItem")
           | Add
       v-text-field(v-model="search", label="Search", prepend-inner-icon="mdi-magnify", variant="outlined", hide-details, single-line)
-      v-data-table(:hover="true", :headers="headers", :items="articleList", :search="search")
+      v-data-table(:hover="true", :headers="headers", :items="articleList", :search="search"  v-if="!loading")
         template(v-slot:item.actions="{ item }")
           v-btn(small, color="primary" @click="editItem(item)" class="mr-4")
             | edit
           v-btn(small, color="error" @click="deleteItem(item)")
             | delete
+
+    
+      v-row(justify="center" align="center" v-if="loading")
+        v-progress-circular(indeterminate :size="40")
 </template>
 
 <script setup lang="ts">
@@ -26,6 +30,7 @@ const headers = ref([
   { text: 'Status', value: 'status',title:'status' },
   { text: 'actions', value: 'actions', sortable: false },
 ])
+const loading = ref(true)
 
 const articleList = ref<Database['public']['Tables']['articles']['Row'][] | null>([])
 
@@ -38,8 +43,10 @@ const editItem = (item:{id:number}) => {
 }
 
 const articleDataHandler = async () => {
+  loading.value = true
   try{
     const data = await supabase.from('articles').select();
+    loading.value = false
     console.log(data,"articleList");
     articleList.value = data.data
   } catch (e) {
@@ -64,10 +71,5 @@ onMounted(async() => {
 </script>
 
 <style lang="sass" scoped>
-.button__container
-  width: 100%
-  display: flex
-  justify-content: flex-end
-  margin: 20px 0
-  padding-right: 15px
+
 </style>

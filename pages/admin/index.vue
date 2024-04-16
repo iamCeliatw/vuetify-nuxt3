@@ -2,12 +2,12 @@
 ClientOnly
   NuxtLayout
     .testt 
-      h1 1123
+      h1 admin
 </template>
   
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-const countries = ref<any[] | null>([])
+
 const supabase = useSupabaseClient()
 
 definePageMeta({

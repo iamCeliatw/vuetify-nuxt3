@@ -45,9 +45,5 @@ onMounted(async() => {
 </script>
 
 <style lang="sass" scoped>
-.button__container
-  width: 100%
-  display: flex
-  justify-content: flex-end
-  margin-bottom: 20px
+
 </style>

@@ -1,58 +1,22 @@
 <template lang="pug">
-.flex__container
-  input(type="file" @change="handleFileUpload($event)")
+  Giscus(
+      id="comments"
+      repo="iamCeliatw/vuetify-nuxt3"
+      repoId="R_kgDOLnHWQQ"
+      category="Announcements"
+      categoryId="DIC_kwDOLnHWQc4Cet3_"
+      mapping="pathname"
+      strict="0"
+      reactionsEnabled="1"
+      emitMetadata="0"
+      inputPosition="bottom"
+      :theme="theme"
+      lang="zh-TW"
+      loading="lazy")
 </template>
-
 <script setup lang="ts">
-import { ref } from 'vue';
-const supabase = useSupabaseClient()
-
-let selectedFile: Ref<File | null> = ref(null);
-
-//上傳圖片
-const handleFileUpload =async (event: any) => {
-  selectedFile.value = event.target.files[0]
-  if(!selectedFile.value) return
-  console.log(event.target.files[0].name)
-  const { data, error } = await supabase
-  .storage
-  .from('test')
-  .upload(`${event.target.files[0].name}`, selectedFile.value, {
-    cacheControl: '3600',
-    upsert: false
-  })
-  console.log(data,"data");
-  if (error) console.log(error)
-}
-
-//取得所有檔案的url
-const { data, error } = await supabase.storage
-  .from('test')
-  .list();
-
-if (error) {
-  console.log('Error listing files:', error.message);
-}
-
-if(data?.length){
-  data.forEach(async(file) => {
-    const { data: fileData} = supabase.storage.from('test').getPublicUrl(file.name);
-if (fileData) {
-      console.log(fileData, "Downloaded data");
-    }
-  });
-}
-
+import Giscus from '@giscus/vue'
+//colorMode 之後做swith theme 的時候要改成動態
+const colorMode = ref('light')
+const theme = computed(() => `${colorMode.value}_protanopia`)
 </script>
-
-<style lang="sass" scoped>
-.flex__container
-  width: 50%
-  display: flex
-  gap: 10px
-  flex-direction: column
-.custom
-  border: 1px solid red
-input
-  border: 1px dashed green
-</style>
