@@ -2,9 +2,23 @@
 .login__wrapper
   .login__container
     .login__form
+      h3 Sign In
+      p email: 
       input(v-model="email" type="email")
+      p password:
       input(v-model="password" type="password")
-      button.custom(@click="signInWithEmail") Sign In with E-Mail
+      button.custom(@click="signInWithEmail") LOGIN 🚀
+  .alert__wrapper(v-if="showError")
+    .alert__container 
+      v-alert(closable
+        title="Error"
+        :text="errorMessage"
+        type="error"
+        class="alert__padding"
+        width="300px" 
+        height="100px"
+        @click:close="showError = false"
+        )
 </template>
 
 <script setup lang="ts">
@@ -13,15 +27,19 @@ const router = useRouter()
 const supabase = useSupabaseClient()
 const email = ref('')
 const password = ref('')
+const showError = ref(false)
+const errorMessage = ref<string | undefined>('')
 const signInWithEmail = async () => {
   const { data, error } = await supabase.auth.signInWithPassword({
   email: email.value,
   password: password.value,
 })
-  if(data)
-  console.log(data);
   if (data?.user) router.push('/admin');
-  if (error) console.log(error)
+  if (error){
+    console.log(error)
+    showError.value = true
+    errorMessage.value = error.message
+  } 
 }
 onMounted(async () => {
   const user = await supabase.auth.getUser()
@@ -35,9 +53,13 @@ onMounted(async () => {
   height: 100%
   min-height: 100vh
   position: relative
-.login__container
+  // background: #83a4d4;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #b6fbff, #83a4d4)
+  background: linear-gradient(to right, #b6fbff, #83a4d4) 
+
+.login__container,
+.alert__container
   margin: auto
-  // border: 1px solid red
   position: absolute
   top: 50%
   left: 50%
@@ -46,16 +68,35 @@ onMounted(async () => {
   display: flex
   flex-direction: column
   gap: 10px
+  h3
+    text-align: center
+    color: #696969
   input
-    padding: 10px
-    border: 1px solid #ccc
+    padding: 5px 10px
+    border: 1px solid #ffffffaa
     border-radius: 5px
+    // border: none
+    &:focus
+      outline: none
   button
     padding: 10px
-    border: 1px solid #ccc
     border-radius: 5px
-    background-color: #ccc
+    background-color: #fff
     cursor: pointer
+    transition: all 0.3s
+    color: #333
     &:hover
-      background-color: #aaa
+      opacity: 0.8
+      color: #fff
+      background-color: #333
+.alert__wrapper
+  width: 100%
+  height: 100%
+  min-height: 100vh
+  top: 0
+  left: 0
+  position: absolute
+  backdrop-filter: blur(5px)
+.alert__padding
+  padding: 10px
 </style>

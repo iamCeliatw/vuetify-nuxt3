@@ -6,11 +6,7 @@
 
 <script setup lang="ts">
 import { indexStore } from "../store/index"
-
-onMounted(() => {
-
-})
-
+//home page 放留言板 介紹 連結
 </script>
 
 <style lang="sass" scoped>

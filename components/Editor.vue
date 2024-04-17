@@ -2,7 +2,6 @@
 QuillEditor(theme="snow",
   @update:content="setValue()",
   v-model:content="content"
-  ref="myQuillEditor",
   contentType="html",
   :options="data.editorOption"
   )
@@ -11,10 +10,15 @@ p {{ content }}
 
 <script lang='ts' setup>
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+const props = defineProps({
+  modelValue: String,
+  content: String
+})
 
-const content = ref('')
-const myQuillEditor = ref()
-const emit = defineEmits(['updateValue'])
+const content = ref(props.modelValue || '') // 初始化內容或者使用 props 的 modelValue
+
+const emit = defineEmits(['update:modelValue', 'updateValue']);
+
 const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'],
   [{ 'list': 'ordered' }, { 'list': 'bullet' }],
@@ -43,7 +47,7 @@ const QuillEditor = defineAsyncComponent(() => import('@vueup/vue-quill').then(m
 
 const setValue = async() => {
   await nextTick()
-  emit('updateValue', content.value)
+  emit('update:modelValue', content.value)
 }
 
 </script>
