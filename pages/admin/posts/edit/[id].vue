@@ -7,7 +7,8 @@ ClientOnly
         v-text-field(v-model="state.description" :error-messages="v$.description.$errors.map(e => e.$message)" label="Description" required @blur="v$.description.$touch" @input="v$.description.$touch")
         v-select(v-model="state.category_id" :error-messages="v$.category_id.$errors.map(e => e.$message)" :items="categoriesList" label="Category" required item-title="name" item-value="id" @blur="v$.category_id.$touch" @change="v$.category_id.$touch")
         v-text-field(type="date" label="Date" v-model="state.publish_date" )
-        Editor(@updateValue="handleContent", :content="state.content" v-model="state.content")
+        AdminEditor(@updateValue="handleContent", :content="state.content" v-model="state.content")
+        v-autocomplete.my-4(v-model="selectedTags" multiple clearable chips label="tags" :items="tagsList" varient="solo" item-title="name" item-value="id")
         v-switch(v-model="state.status" :label='state.status ? "上架" : "下架" ' hide-details inset required)
         .my-4
         v-btn(class="me-4" @click="submitHandler") submit
@@ -32,16 +33,24 @@ const initialState = {
   status: true,
 }
 const openCalender = ref(false)
-
+const tagsList = ref<Database['public']['Tables']['tags']['Row'][] | null>([])
+const categoriesList = ref<Database['public']['Tables']['categories']['Row'][] | null>([]) 
+const selectedTags = ref<number[] | null>([])
+const oldSelectedTags = ref<number[]>([])
+const articleId = ref(route.params.id)
 const state = reactive({
   ...initialState,
 })
-watch(() => state, (value) => {
- console.log(value,"送出的資料");
-}, { deep: true })
-const onDateSelected = (date: string) => {
+
+
+watch(() => state.content, (newContent) => {
+  // Update the content of AdminEditor when state.content changes
+  if(newContent) { 
+    handleContent(newContent);
+  }
+});
+const onDateSelected = (date: string) => { 
   const timestamp = new Date(date).getTime();
-  console.log(timestamp);
   openCalender.value = false
 }
 //監聽編輯器文字
@@ -51,8 +60,15 @@ const handleContent = (content:string) => {
   }
   state.content = content
 };
+const TagDataHandler = async () => {
+  try{
+    const data = await supabase.from('tags').select();
+    tagsList.value = data.data
+  } catch (e) {
+    console.log('error:', e);
+  }
+}
 
-const categoriesList = ref<Database['public']['Tables']['categories']['Row'][] | null>([]) 
 const rules = {
   title: { required },
   description: { required },
@@ -64,7 +80,6 @@ const rules = {
 const categoryDataHandler = async () => {
   try{
     const data = await supabase.from('categories').select();
-    console.log(data.data,"category list");
     categoriesList.value = data.data
   } catch (e) {
     console.log('error:', e);
@@ -75,8 +90,6 @@ const articleDataHandler = async () => {
     .from('articles')
     .select()
     .eq('id', route.params.id)
-    console.log(data,"articleData");
-    
     if (error) {
     console.error('Failed to fetch article data:', error);
     return;
@@ -89,10 +102,69 @@ const articleDataHandler = async () => {
       state.category_id = article.category_id || null;
       state.content = article.content;
       state.publish_date = changeDate(article.publish_date) ?? '';
-      state.status = article.status === 1; // 假設 status 存儲為 1 或 0
-      console.log("Updated state with article data:", state);
+      state.status = article.status === 1;
+
     } else {
       console.log("No article found with the given ID.");
+    }
+}
+const articleTagHandler = async () => {
+  const { data, error } = await supabase
+    .from('article_tag')
+    .select('tag_id')
+    .eq('article_id', route.params.id)
+    if (error) {
+    console.error('Failed to fetch article tag data:', error);
+    return;
+    }
+    if (data) {
+      oldSelectedTags.value = data.map((tag) => tag.tag_id);
+      selectedTags.value = data.map((tag) => tag.tag_id);
+    }
+}
+
+//比對文章新舊tag
+const compareTags = (currentTags:number[], newTags:number[]) => {
+  const tagsToAdd = newTags.filter(tag => !currentTags.includes(tag));
+  const tagsToRemove = currentTags.filter(tag => !newTags.includes(tag));
+  return { tagsToAdd, tagsToRemove };
+}
+
+//移除資料庫tag
+const removeTags = async (articleId:number, tagToRemove:number[]) => {
+    tagToRemove.forEach(async (removeId) => {
+      const { error } = await supabase
+        .from('article_tag')
+        .delete()
+        .eq('article_id', articleId)
+        .eq('tag_id', removeId);
+      if (error) {
+        console.error('Error removing tags:', error);
+      }
+    }
+  ) 
+}
+//新增資料庫tag
+const addTags = async (articleId:number, tagsToAdd:number[]) => {
+    tagsToAdd.forEach(async (tagId) => {
+      const { error } = await supabase
+        .from('article_tag')
+        .insert({ article_id: articleId, tag_id: tagId, sort: 0 });
+      if (error) {
+        console.error('Error adding tags:', error);
+      }
+    }
+  )
+}
+
+//更新編輯完的tag
+const updateArticleTags = async (articleId:number, newTags:number[]) => {
+    const { tagsToAdd, tagsToRemove } = compareTags(oldSelectedTags.value, newTags);
+    if (tagsToRemove.length > 0) {
+      await removeTags(articleId, tagsToRemove);
+    }
+    if (tagsToAdd.length > 0) {
+      await addTags(articleId, tagsToAdd);
     }
 }
 
@@ -101,19 +173,21 @@ const changeDate = (date: string | null) => {
   return date_result.toISOString().split('T')[0]
 }
 
-onBeforeMount(async()=>{ 
+onBeforeMount(async() => { 
   await categoryDataHandler()
-  if(route.params.id ){
+  if(route.params.id){
     await articleDataHandler()
+    await TagDataHandler()
+    await articleTagHandler()
   }
 })
 
 const v$ = useVuelidate(rules, state)
 
 const submitHandler = async () => {
-await v$.value.$validate()
-if (!v$.value.$error) {
-    try{
+  await v$.value.$validate()
+  if (!v$.value.$error) {
+    try {
       const { error } = await supabase
       .from('articles')
       .update({ 
@@ -124,12 +198,12 @@ if (!v$.value.$error) {
         publish_date: state.publish_date,
         status: state.status ? 1 : 0,})
       .eq('id', route.params.id)
-      }catch(e){
+        await updateArticleTags(Number(route.params.id), selectedTags.value ?? []);
+      } catch(e) {
         console.log(e);
       }
   }
 }
-
 
 const clear = () => {
   v$.value.$reset()
@@ -137,9 +211,4 @@ const clear = () => {
     (state as Record<string, typeof value>)[key] = value
   }
 }
-
 </script>
-
-<style lang='sass' scoped>
-
-</style>

@@ -25,7 +25,6 @@ const search = ref('')
 const headers = ref([
   { text: 'name', value: 'name', title:'name'},
   { text: 'actions', value: 'actions', sortable: false },
-
 ])
 
 const categoryList = ref<Database['public']['Tables']['categories']['Row'][] | null>([])
@@ -33,7 +32,6 @@ const categoryList = ref<Database['public']['Tables']['categories']['Row'][] | n
 const categoriesDataHandler = async () => {
   try{
     const data = await supabase.from('categories').select();
-    console.log(data,"categoryList");
     categoryList.value = data.data
   } catch (e) {
     console.log('error:', e);
@@ -43,7 +41,3 @@ onMounted(async() => {
  await categoriesDataHandler()
 })
 </script>
-
-<style lang="sass" scoped>
-
-</style>

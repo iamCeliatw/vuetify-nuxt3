@@ -3,8 +3,7 @@ ClientOnly
   NuxtLayout
     v-card.h-auto(title="Articles", flat)
       .button__container
-        v-btn(color="primary", @click="addItem")
-          | Add
+        v-btn(color="primary" @click="addItem" prepend-icon="mdi-plus" class="text-none font-weight-regular" text="ADD" variant="tonal")
       v-text-field(v-model="search", label="Search", prepend-inner-icon="mdi-magnify", variant="outlined", hide-details, single-line)
       v-data-table(:hover="true", :headers="headers", :items="articleList", :search="search"  v-if="!loading")
         template(v-slot:item.actions="{ item }")
@@ -12,8 +11,6 @@ ClientOnly
             | edit
           v-btn(small, color="error" @click="deleteItem(item)")
             | delete
-
-    
       v-row(justify="center" align="center" v-if="loading")
         v-progress-circular(indeterminate :size="40")
 </template>
@@ -50,7 +47,7 @@ const articleDataHandler = async () => {
     console.log(data,"articleList");
     articleList.value = data.data
   } catch (e) {
-    console.log('error:', e);
+    // console.log('error:', e);
   }
 }
 
