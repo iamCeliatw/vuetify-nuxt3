@@ -27,11 +27,21 @@ ClientOnly
           | edit
         v-btn(small, color="error" @click="deleteItem(item)")
           | delete
-
+    .alert__popup
+      v-alert(
+        closable
+        v-model="errorMessage.visable"
+        :title="errorMessage.title"
+        :text="errorMessage.text"
+        type="error"
+        class="alert__padding"
+      )
+    //- AdminAlertPopup(:text="`this tag `" :title="`failed!`" :type="`error`"  :visable="errorMessage.visable")
 </template>
 
 <script lang='ts' setup>
-import type { Database } from '../../../types/supabase';
+import type { Database,Tables } from '../../../types/supabase';
+import { useFetchApi } from "../../../composables/supabase-api";
 const supabase = useSupabaseClient<Database>()
 const dialog =  ref(false)
 const loading = ref(true) 
@@ -45,22 +55,30 @@ const editTag = ref({
   name: '',
 })
 
-watch(() => editTag, (value) => {
-  // console.log(value,"送出的資料");
-}, { deep: true })
-const tagsList = ref<Database['public']['Tables']['tags']['Row'][]>([])
-const tagHandler = async () => {
-  loading.value = true
-  const { data, error } = await supabase.from('tags').select()
-  if (data) {
-    tagsList.value = data
-    loading.value = false
-    // console.log(tagsList.value, 'tagsList');
-  } else {
-    // console.log('error:', error);
-  }
+const handlePopup = () => {
+  errorMessage.value.text = '';
+  errorMessage.value.title = '';
+  errorMessage.value.visable = false;
 }
 
+const tagsList = ref<Database['public']['Tables']['tags']['Row'][]>([])
+const { getData, deleteData } = useFetchApi();
+
+const tagHandler = async () => {
+  loading.value = true
+  tagsList.value = await getData('tags')
+  loading.value = false
+}
+type ErrorMessage = {
+  text: string,
+  title: string,
+  visable: boolean,
+}
+const errorMessage = ref<ErrorMessage>({
+  text: '',
+  title: '',
+  visable: false,
+})
 onBeforeMount(async () => {
   await tagHandler();
 })
@@ -72,7 +90,12 @@ const addItem = async (item?:Database['public']['Tables']['tags']['Row']) => {
         name: editTag.value.name,
       }).eq('id', editTag.value.id)
       if(error?.code === '23505') {
-        alert('Tag name already exists')
+        errorMessage.value = {
+          text: 'Tag name already exists',
+          title: 'failed!',
+          visable: true,
+        }
+        // alert('Tag name already exists')
         return
       }
     } catch(e) {
@@ -85,7 +108,13 @@ const addItem = async (item?:Database['public']['Tables']['tags']['Row']) => {
         name: editTag.value.name,
       })
       if(error?.code === '23505') {
-        alert('Tag name already exists')
+        errorMessage.value = {
+          text: 'Tag name already exists',
+          title: 'failed!',
+          visable: true,
+        }
+        console.log(errorMessage.value, 'errorMessage');
+        // alert('Tag name already exists')
         return
       }
     } catch(e) {
@@ -102,10 +131,19 @@ const addItem = async (item?:Database['public']['Tables']['tags']['Row']) => {
 }
 const deleteItem = async (item:Database['public']['Tables']['tags']['Row']) => {
   try{
-    const { error } = await supabase
-    .from('tags')
-    .delete()
-    .eq('id', item.id)
+    //先找出article_tag內 是否有tag_id
+    const { data, error } = await supabase.from('article_tag').select('tag_id').eq('tag_id', item.id)
+    if(data?.length){
+      errorMessage.value = {
+        text: 'This tag is used in articles, please remove the tag from the article first',
+        title: 'failed!',
+        visable: true,
+        }
+      // alert('This tag is used in articles, please remove the tag from the article first')
+      return
+    }
+    const filter:FilterCondition<'tags'>[] =  [{ column: 'id', operator: 'eq', value: item.id }];
+    await deleteData('tags', filter)
     tagsList.value = tagsList.value?.filter((tag) => tag.id !== item.id);
   }catch(e){
     console.log('error:', e);
@@ -132,4 +170,13 @@ const openEditPopup = (item:Database['public']['Tables']['tags']['Row']) => {
   width: auto
   height:  auto
   max-width: 30%
+.alert__popup
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  z-index: 1000000
+// .alert__padding
+//   padding: 45px 10px
+
 </style>

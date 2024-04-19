@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   build: {
     transpile: ['vuetify'],
+    analyze: true,
   },
   modules: [
     (_options, nuxt) => {

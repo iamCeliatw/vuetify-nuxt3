@@ -22,13 +22,6 @@ ClientOnly
             class="alert__padding"
             @click:close="redirectToList"
             )
-        .alert__popup(v-if="submitPopupOpen && !formSuccess")
-          v-alert(closable
-            title="Info"
-            text="error to add article !"
-            type="error"
-            class="alert__padding"
-            )
 </template>
 
 <script setup lang="ts">
@@ -38,6 +31,8 @@ import { required } from '@vuelidate/validators'
 import type { VAlert } from 'vuetify/components';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import type { Database } from '../../../../types/supabase';
+import { useFetchApi } from "../../../../composables/supabase-api";
+const { getData } = useFetchApi();
 const router = useRouter()
 const supabase = useSupabaseClient<Database>()
 const initialState = {
@@ -52,7 +47,7 @@ const selectedTags = ref<number[] | null>([])
 const tagsList = ref<Database['public']['Tables']['tags']['Row'][] | null>([])
 const openCalender = ref(false)
 const redirectToList = () => {
-  // router.push('/admin/posts')
+  router.push('/admin/posts')
 }
 const state = reactive({
   ...initialState,
@@ -84,26 +79,17 @@ const rules = {
 }
 
 const categoryDataHandler = async () => {
-  try{
-    const data = await supabase.from('categories').select();
-    // console.log(data.data,"category list");
-    categoriesList.value = data.data
-  } catch (e) {
-    // console.log('error:', e);
-  }
-}
+  categoriesList.value = await getData('categories')
+} 
+
 onBeforeMount(async()=>{
   await categoryDataHandler()
 })
+
 const TagDataHandler = async () => {
-  try{
-    const data = await supabase.from('tags').select();
-    // console.log(data.data,"tagsList list");
-    tagsList.value = data.data
-  } catch (e) {
-    // console.log('error:', e);
-  }
+    tagsList.value = await getData('tags')
 }
+
 onBeforeMount(async()=>{
   await categoryDataHandler()
   await TagDataHandler()
@@ -112,6 +98,7 @@ onBeforeMount(async()=>{
 const v$ = useVuelidate(rules, state)
 const formSuccess = ref(false)
 const submitPopupOpen = ref(false)
+
 const submitHandler = async () => {
   await v$.value.$validate()
   if (!v$.value.$error) {
@@ -136,7 +123,6 @@ const submitHandler = async () => {
           })
         })
       }
-
     }catch(e){
       // console.log(e);
     }

@@ -22,6 +22,8 @@ import { required } from '@vuelidate/validators'
 import type { VAlert } from 'vuetify/components';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import type { Database } from '../../../../types/supabase';
+import { useFetchApi, type FilterCondition } from "../../../../composables/supabase-api";
+const { getData } = useFetchApi();
 const supabase = useSupabaseClient<Database>()
 const route = useRoute()
 const initialState = {
@@ -61,12 +63,7 @@ const handleContent = (content:string) => {
   state.content = content
 };
 const TagDataHandler = async () => {
-  try{
-    const data = await supabase.from('tags').select();
-    tagsList.value = data.data
-  } catch (e) {
-    console.log('error:', e);
-  }
+  tagsList.value = await getData('tags')
 }
 
 const rules = {
@@ -79,24 +76,22 @@ const rules = {
 
 const categoryDataHandler = async () => {
   try{
-    const data = await supabase.from('categories').select();
-    categoriesList.value = data.data
+    categoriesList.value  = await getData('categories')
   } catch (e) {
     console.log('error:', e);
   }
 }
 const articleDataHandler = async () => {
-  const { data, error } = await supabase
-    .from('articles')
-    .select()
-    .eq('id', route.params.id)
-    if (error) {
-    console.error('Failed to fetch article data:', error);
-    return;
-    }
+  // const { data, error } = await supabase
+  //   .from('articles')
+  //   .select()
+  //   .eq('id', route.params.id)
+  const filter:FilterCondition<'articles'>[] = [{ column: 'id', operator: 'eq', value: route.params.id }];
+  const articles = await getData('articles', filter);
 
-    if (data && data.length > 0) {
-      const article = data[0];
+
+    if (articles && articles.length > 0) {
+      const article = articles[0];
       state.title = article.title;
       state.description = article.description;
       state.category_id = article.category_id || null;

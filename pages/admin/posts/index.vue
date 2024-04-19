@@ -17,9 +17,11 @@ ClientOnly
 
 <script setup lang="ts">
 import type { Database } from '~/types/supabase';
+import { useFetchApi, type FilterCondition } from "../../../composables/supabase-api";
 const supabase = useSupabaseClient()
 const router = useRouter()
 const search = ref('')
+const { getData,deleteData } = useFetchApi()
 const headers = ref([
   { text: 'Title', value: 'title', title:'title'},
   { text: 'Category', value: 'category_id',title:'category' },
@@ -41,24 +43,15 @@ const editItem = (item:{id:number}) => {
 
 const articleDataHandler = async () => {
   loading.value = true
-  try{
-    const data = await supabase.from('articles').select();
-    loading.value = false
-    console.log(data,"articleList");
-    articleList.value = data.data
-  } catch (e) {
-    // console.log('error:', e);
-  }
+  articleList.value = await getData('articles')
+  loading.value = false
 }
 
 //要再做一層防呆 避免誤按
 const deleteItem = async (item: {id:number}) => {
-  const { error } = await supabase
-    .from('articles')
-    .delete()
-    .eq('id', item.id)
-    //delete 後重新撈取資料
-    await articleDataHandler()
+  const filter:FilterCondition<'articles'>[] =  [{ column: 'id', operator: 'eq', value: item.id }];
+  await deleteData('articles', filter)
+  articleList.value = articleList.value?.filter((article) => article.id !== item.id)
 }
 
 onMounted(async() => {

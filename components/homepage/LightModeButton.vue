@@ -27,7 +27,7 @@ const changeMode = () => {
 $scale:55px
 $time: 1s
 .container
-  display: flex
+  display: flex 
   flex-direction: column
   width: 80%
   @media (min-width:500px)
@@ -53,7 +53,7 @@ input[type="checkbox"]
   
 .scenary
   @include common(flex, row, space-between,null,null,null,null)
-  padding: 5px 10px 0px 10px
+  padding: 2px 10px 0px 10px
   svg
     width: calc($scale / 3)
 
