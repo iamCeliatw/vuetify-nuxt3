@@ -1,14 +1,14 @@
 <template lang="pug">
-.login__wrapper
-  .login__container
+section.login__wrapper
+  section.login__container
     .login__form
       h3 Sign In
-      p email: 
+      label(for="email" type="email") email: 
       input(v-model="email" type="email")
-      p password:
+      label(for='password') password:
       input(v-model="password" type="password")
       button.custom(@click="signInWithEmail") LOGIN 🚀
-  .alert__wrapper(v-if="showError")
+  section.alert__wrapper(v-if="showError")
     .alert__container 
       v-alert(closable
         title="Error"
@@ -54,8 +54,8 @@ onMounted(async () => {
   min-height: 100vh
   position: relative
   // background: #83a4d4;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #b6fbff, #83a4d4)
-  background: linear-gradient(to right, #b6fbff, #83a4d4) 
+  // background: -webkit-linear-gradient(to right, #b6fbff, #83a4d4)
+  // background: linear-gradient(to right, #b6fbff, #83a4d4) 
 
 .login__container,
 .alert__container

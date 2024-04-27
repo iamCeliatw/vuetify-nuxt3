@@ -42,9 +42,9 @@ const imageHandler = async () => {
     data.forEach(async(file) => {
       const { data: fileData} = supabase.storage.from('article').getPublicUrl(file.name);
       if(fileData){
-        console.log(fileData, 'fileData');
+        // console.log(fileData, 'fileData');
         imagesList.value.push({image: fileData.publicUrl, name: file.name})
-        console.log(imagesList.value, 'imagesList');
+        // console.log(imagesList.value, 'imagesList');
       }
     });
     loading.value = false
@@ -76,7 +76,7 @@ onBeforeMount(async () => {
 })
 
 const deleteItem = async (item:Image) => {
-  console.log(item, 'deleteItem');
+  // console.log(item, 'deleteItem');
   const { data, error } =  await supabase
   .storage
   .from(STORAGE_BUCKET)

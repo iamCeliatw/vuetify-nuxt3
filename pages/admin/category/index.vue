@@ -19,31 +19,22 @@ ClientOnly
 <script lang='ts' setup>
 import { onMounted } from 'vue';
 import type { Database } from '~/types/supabase';
+import { useFetchApi } from "../../../composables/supabase-api";
 const supabase = useSupabaseClient()
 const router = useRouter()
 const search = ref('')
 const headers = ref([
   { text: 'name', value: 'name', title:'name'},
   { text: 'actions', value: 'actions', sortable: false },
-
 ])
+const { getData } = useFetchApi();
 
 const categoryList = ref<Database['public']['Tables']['categories']['Row'][] | null>([])
 
 const categoriesDataHandler = async () => {
-  try{
-    const data = await supabase.from('categories').select();
-    console.log(data,"categoryList");
-    categoryList.value = data.data
-  } catch (e) {
-    console.log('error:', e);
-  }
+  categoryList.value = await getData('categories')
 }
 onMounted(async() => {
  await categoriesDataHandler()
 })
 </script>
-
-<style lang="sass" scoped>
-
-</style>

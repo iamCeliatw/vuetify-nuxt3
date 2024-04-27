@@ -49,6 +49,11 @@ const setValue = async() => {
   await nextTick()
   emit('update:modelValue', content.value)
 }
+watch(() => props.modelValue, (value) => {
+  if(value){
+    content.value = value;
+  }
+}, { immediate: true });
 
 </script>
 

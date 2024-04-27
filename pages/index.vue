@@ -1,7 +1,5 @@
 <template lang="pug">
-.testt 
-  h1
-  button(@click="send")
+HomepageNavbar
 </template>
 
 <script setup lang="ts">
