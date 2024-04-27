@@ -1,11 +1,10 @@
-<template lang='pug'>
+<template lang="pug">
 nav.navbar__wrapper 
   .navbar__container
-    .navigate__section 
-      ul
-        li home 
-        li about
-        li contact
+    ul.navigate__section      
+      li home 
+      li about
+      li contact
     .button__section 
       .github__icon 
         img(src="/github.png")
@@ -13,39 +12,37 @@ nav.navbar__wrapper
         //- HomepageSvgSunIcon
 </template>
 
-<script lang='ts' setup>
-  
-</script>
+<script lang="ts" setup></script>
 
-<style lang='sass' scoped>
-.navbar__wrapper 
-  width: 100%
+<style lang="sass" scoped>
+.navbar__wrapper
+  width: 1200px
   height: 90px
   display: flex
   justify-content: center
+  margin: 0 auto
 .navbar__container
-  padding: 0 20px 
+  padding: 0 20px
   display: flex
-  width: 60%
+  width: 100%
   height: 100%
-  justify-content: center
+  justify-content: space-between
   align-items: center
 .navigate__section
-  flex: 2
-  ul
-    display: flex
-    list-style-type: none
+  // flex: 2
+  display: flex
+  list-style-type: none
   li
     margin-right: 20px
     font-weight: 500
     font-size: 20px
     color: var(--text-color)
 .button__section
-  flex: 1
+  // flex: 1
   display: flex
   align-items: center
   gap: 10px
-.github__icon 
+.github__icon
   width: 30px
   height: 30px
   border-radius: 50%
@@ -53,5 +50,4 @@ nav.navbar__wrapper
     width: 100%
     height: 100%
     object-fit: cover
-
 </style>
