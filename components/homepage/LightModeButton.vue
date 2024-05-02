@@ -18,6 +18,7 @@ const changeMode = () => {
   document.documentElement.style.setProperty('--text-color', darkMode.value ? '#FFF' : '#000');
   document.documentElement.style.setProperty('--background-color', darkMode.value ? '#000' : '#FFF');
   document.documentElement.style.setProperty('--box-color', darkMode.value ? '#FFF' : '#000');
+  document.documentElement.style.setProperty('--border-color', darkMode.value ? '#D0D0D0' : '#696969');
 }
 
 </script> 

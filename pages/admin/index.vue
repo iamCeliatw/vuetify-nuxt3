@@ -1,7 +1,7 @@
 <template lang="pug">
 ClientOnly
   NuxtLayout
-    .testt 
+    .test
       h1 admin
 </template>
   
@@ -11,7 +11,7 @@ import { reactive, ref } from "vue";
 const supabase = useSupabaseClient()
 
 definePageMeta({
-  middleware: 'auth'
+  middleware: 'auth',
 });
 
 </script>

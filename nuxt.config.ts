@@ -28,7 +28,6 @@ export default defineNuxtConfig({
       template: {
         transformAssetUrls,
       },
-      
     },
     // css: {
     //   preprocessorOptions: {
@@ -48,7 +47,7 @@ export default defineNuxtConfig({
       login: '/login',
       callback: '/admin',
       // include: ['/admin'],
-      exclude: ['/','/admin(/*)?','/test'],
+      exclude: ['/','/admin(/*)?','/article(/*)?'],
       cookieRedirect: false,
     }
   },

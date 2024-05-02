@@ -4,6 +4,7 @@ ClientOnly
     .form-wrapper.w-75.py-12.ma-auto
       form
         v-text-field(v-model="state.title" :counter="10" :error-messages="v$.title.$errors.map(e => e.$message)" label="Title" required @blur="v$.title.$touch" @input="v$.title.$touch")
+        v-text-field(v-model="state.key" :counter="10" :error-messages="v$.key.$errors.map(e => e.$message)" label="key" required @blur="v$.key.$touch" @input="v$.key.$touch")
         v-text-field(v-model="state.description" :error-messages="v$.description.$errors.map(e => e.$message)" label="Description" required @blur="v$.description.$touch" @input="v$.description.$touch")
         v-select(v-model="state.category_id" :error-messages="v$.category_id.$errors.map(e => e.$message)" :items="categoriesList" label="Category" required item-title="name" item-value="id" @blur="v$.category_id.$touch" @change="v$.category_id.$touch")
         v-text-field(type="date" label="Date" v-model="state.publish_date" )
@@ -13,6 +14,24 @@ ClientOnly
         .my-4
         v-btn(class="me-4" @click="submitHandler") submit
         v-btn(@click="clear") clear
+        .alert__popup(v-if="submitPopupOpen && formSuccess")
+          v-alert(closable
+            v-model="formSuccess"
+            title="Info"
+            text="success to edit article"
+            type="success"
+            height="150px" 
+            class="alert__padding"
+            )
+        .image__popup(v-if="store.openImagePopup")
+          v-card(prepend-icon="mdi-plus" title="Photo")
+            .image__wrapper(class="d-flex")
+              .image__container(v-for="image in imagesList", :key="image.name" @click="addImage(image)")
+                img(:src="image.image" alt="image" class="w-100")
+            v-card-actions
+              v-spacer
+              v-btn(text="Close" variant="plain" @click="store.openImagePopup = false")
+              v-btn(color="primary" text="Save" variant="tonal")
 </template>
 
 <script setup lang="ts">
@@ -21,19 +40,31 @@ import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import type { VAlert } from 'vuetify/components';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import { indexStore } from "../../../../store/index"
 import type { Database } from '../../../../types/supabase';
 import { useFetchApi, type FilterCondition } from "../../../../composables/supabase-api";
+type Image = {
+  image: string,
+  name: string
+}
+const imagesList = ref<Image[]>([])
+const loading = ref(true)
+const store = indexStore();
 const { getData } = useFetchApi();
 const supabase = useSupabaseClient<Database>()
 const route = useRoute()
 const initialState = {
   title: '' as string | null,
+  key: '' as string | null,
   description: '' as string | null,
   category_id: null as number | null,
   content: '' as string | null,
   publish_date: '',
   status: true,
 }
+const formSuccess = ref(false)
+const submitPopupOpen = ref(false)
+
 const openCalender = ref(false)
 const tagsList = ref<Database['public']['Tables']['tags']['Row'][] | null>([])
 const categoriesList = ref<Database['public']['Tables']['categories']['Row'][] | null>([]) 
@@ -44,6 +75,10 @@ const state = reactive({
   ...initialState,
 })
 
+const addImage = (image: Image) => {
+  store.selectedImage = image
+  store.openImagePopup = false
+}
 
 watch(() => state.content, (newContent) => {
   // Update the content of AdminEditor when state.content changes
@@ -68,6 +103,7 @@ const TagDataHandler = async () => {
 
 const rules = {
   title: { required },
+  key: { required },
   description: { required },
   category_id: { required },
   status: { required },
@@ -88,17 +124,15 @@ const articleDataHandler = async () => {
   //   .eq('id', route.params.id)
   const filter:FilterCondition<'articles'>[] = [{ column: 'id', operator: 'eq', value: route.params.id }];
   const articles = await getData('articles', filter);
-
-
     if (articles && articles.length > 0) {
       const article = articles[0];
       state.title = article.title;
+      state.key = article.key;
       state.description = article.description;
       state.category_id = article.category_id || null;
       state.content = article.content;
       state.publish_date = changeDate(article.publish_date) ?? '';
       state.status = article.status === 1;
-
     } else {
       console.log("No article found with the given ID.");
     }
@@ -168,12 +202,34 @@ const changeDate = (date: string | null) => {
   return date_result.toISOString().split('T')[0]
 }
 
+const imageHandler = async () => {
+  loading.value = true
+  imagesList.value = []
+  const { data, error } = await supabase.storage
+    .from('article')
+    .list();
+  if (error) {
+    console.log('Error listing files:', error.message);
+  }
+  if(data?.length){
+    data.forEach(async(file) => {
+      const { data: fileData} = supabase.storage.from('article').getPublicUrl(file.name);
+      if(fileData){
+        imagesList.value.push({image: fileData.publicUrl, name: file.name})
+      }
+    });
+    loading.value = false
+  }
+}
+
+
 onBeforeMount(async() => { 
   await categoryDataHandler()
   if(route.params.id){
     await articleDataHandler()
     await TagDataHandler()
     await articleTagHandler()
+    await imageHandler()
   }
 })
 
@@ -187,13 +243,17 @@ const submitHandler = async () => {
       .from('articles')
       .update({ 
         title: state.title,
+        key: state.key,
         description: state.description,
         category_id: state.category_id,
         content: state.content,
         publish_date: state.publish_date,
         status: state.status ? 1 : 0,})
       .eq('id', route.params.id)
-        await updateArticleTags(Number(route.params.id), selectedTags.value ?? []);
+      await updateArticleTags(Number(route.params.id), selectedTags.value ?? []);
+      formSuccess.value = !error;
+      submitPopupOpen.value = true;
+      console.log(formSuccess.value, 'formSuccess', submitPopupOpen.value, 'submitPopupOpen');
       } catch(e) {
         console.log(e);
       }
@@ -207,3 +267,8 @@ const clear = () => {
   }
 }
 </script>
+
+
+<style lang='sass' scoped>
+
+</style>
