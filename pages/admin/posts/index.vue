@@ -9,10 +9,15 @@ ClientOnly
         template(v-slot:item.actions="{ item }")
           v-btn(small, color="primary" @click="editItem(item)" class="mr-4")
             | edit
-          v-btn(small, color="error" @click="deleteItem(item)")
+          v-btn(small, color="error" @click="deleteDialog = true")
             | delete
       v-row(justify="center" align="center" v-if="loading")
         v-progress-circular(indeterminate :size="40")
+      v-dialog(v-model="deleteDialog" width="auto")
+        v-card(max-width="400" prepend-icon="mdi-update" text="Are you sure to delete this article?")
+          template(v-slot:actions)
+            v-btn(class="ms-auto" text="Ok" @click="deleteArticle(item)")
+            v-btn(class="ms-auto" text="Ok" @click="deleteDialog = false")
 </template>
 
 <script setup lang="ts">
@@ -30,7 +35,7 @@ const headers = ref([
   { text: 'actions', value: 'actions', sortable: false },
 ])
 const loading = ref(true)
-
+const deleteDialog = ref(false)
 const articleList = ref<Database['public']['Tables']['articles']['Row'][] | null>([])
 
 const addItem = () => {
@@ -46,14 +51,16 @@ const articleDataHandler = async () => {
   articleList.value = await getData('articles')
   loading.value = false
 }
+const selectedItem = ref<Database['public']['Tables']['articles']['Row']>()
 
-//要再做一層防呆 避免誤按
-const deleteItem = async (item: {id:number}) => {
-  const filter:FilterCondition<'articles'>[] =  [{ column: 'id', operator: 'eq', value: item.id }];
-  await deleteData('articles', filter)
-  articleList.value = articleList.value?.filter((article) => article.id !== item.id)
+const deleteArticle = async () => {
+  if(selectedItem.value && articleList.value){ 
+    const filter:FilterCondition<'articles'>[] =  [{ column: 'id', operator: 'eq', value: selectedItem.value.id }];
+    await deleteData('articles', filter)
+    articleList.value = articleList.value?.filter((article) => article.id !== selectedItem.value?.id)
+    deleteDialog.value = false
+  }
 }
-
 onMounted(async() => {
  await articleDataHandler()
 })

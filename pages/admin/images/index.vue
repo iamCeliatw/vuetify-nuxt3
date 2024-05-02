@@ -42,9 +42,7 @@ const imageHandler = async () => {
     data.forEach(async(file) => {
       const { data: fileData} = supabase.storage.from('article').getPublicUrl(file.name);
       if(fileData){
-        // console.log(fileData, 'fileData');
         imagesList.value.push({image: fileData.publicUrl, name: file.name})
-        // console.log(imagesList.value, 'imagesList');
       }
     });
     loading.value = false

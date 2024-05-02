@@ -1,23 +1,47 @@
 <template lang='pug'>
 QuillEditor(theme="snow",
   @update:content="setValue()",
+  ref="quillEditor",
   v-model:content="content"
   contentType="html",
   :options="data.editorOption"
   )
-p {{ content }}
+
 </template>
 
-<script lang='ts' setup>
+<script setup>
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import "quill/dist/quill.snow.css";
+import hljs from 'highlight.js';
+import 'highlight.js/styles/monokai-sublime.css'; 
+import { indexStore } from "../../store/index"
+
 const props = defineProps({
   modelValue: String,
   content: String
 })
+const store = indexStore();
+// watch(() => store.selectedImage, (value) => {
+//   if(value && quillEditor.value){
+//     quillEditor.value.getQuill().clipboard.dangerouslyPasteHTML(0, `<img src="${store.selectedImage.image}" alt="${store.selectedImage.name}" />`);
+//   }
+// }, { immediate: true });
+
+
+
+
 
 const content = ref(props.modelValue || '') // 初始化內容或者使用 props 的 modelValue
-
+const quillEditor = ref(null)
 const emit = defineEmits(['update:modelValue', 'updateValue']);
+watch(() => store.selectedImage, (newValue, oldValue) => {
+  if (newValue && quillEditor.value) {
+    let length = quillEditor.value.getQuill().getLength();
+    console.log(newValue, oldValue, length);
+    quillEditor.value.getQuill().insertEmbed(length, 'image', newValue.image);
+    store.selectedImage = null;
+  }
+});
 
 const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'],
@@ -28,12 +52,16 @@ const toolbarOptions = [
   [{ 'color': [] }, { 'background': [] }],
   [{ 'align': [] }],
   ['video'],
-  ['link'],
+  ['link'],['code-block'],['blockquote'],
 ]
+
+const QuillEditor = defineAsyncComponent(() => import('@vueup/vue-quill').then(module => module.QuillEditor));
+
 const data = reactive({
   content: '',
   editorOption: {
     modules: {
+      syntax: true,
       toolbar: {
         container:
           toolbarOptions,
@@ -42,8 +70,9 @@ const data = reactive({
     placeholder: '請輸入內容...'
   }
 })
+window.hljs = hljs;
+
 //為防止server端渲染時，找不到window對象，所以需要在client端渲染
-const QuillEditor = defineAsyncComponent(() => import('@vueup/vue-quill').then(module => module.QuillEditor));
 
 const setValue = async() => {
   await nextTick()
@@ -55,8 +84,29 @@ watch(() => props.modelValue, (value) => {
   }
 }, { immediate: true });
 
+
+onMounted(async() => {
+  await nextTick(() => {
+    if(quillEditor.value){ 
+      const quill = quillEditor.value.getQuill();
+      const toolbar = quill.getModule('toolbar');
+      const customButton = document.createElement('span');
+      const imageHTML = `
+        <div class="custom-button">
+          <img src="/edit.png"></img>
+        </div>`
+      customButton.classList.add('ql-formats');
+      customButton.innerHTML = imageHTML
+      customButton.addEventListener('click', () => {
+        store.popupHandler();
+        console.log('按鈕被點擊了',store.openImagePopup);
+      });
+      toolbar.container.appendChild(customButton);
+    }
+  });
+});
 </script>
 
 <style lang='sass' scoped>
-  
+
 </style>

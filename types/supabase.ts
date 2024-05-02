@@ -12,32 +12,35 @@ export type Database = {
       article_tag: {
         Row: {
           article_id: number
+          id: number
           sort: number
           tag_id: number
         }
         Insert: {
           article_id: number
+          id?: never
           sort: number
           tag_id: number
         }
         Update: {
           article_id?: number
+          id?: never
           sort?: number
           tag_id?: number
         }
         Relationships: [
           {
-            foreignKeyName: "article_tag_article_id_fkey"
-            columns: ["article_id"]
-            isOneToOne: false
-            referencedRelation: "articles"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "article_tag_tag_id_fkey"
             columns: ["tag_id"]
             isOneToOne: false
             referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_article_tag_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
             referencedColumns: ["id"]
           },
         ]
@@ -49,6 +52,7 @@ export type Database = {
           count: number | null
           description: string | null
           id: number
+          key: string | null
           publish_date: string | null
           status: number
           title: string | null
@@ -59,6 +63,7 @@ export type Database = {
           count?: number | null
           description?: string | null
           id?: number
+          key?: string | null
           publish_date?: string | null
           status?: number
           title?: string | null
@@ -69,6 +74,7 @@ export type Database = {
           count?: number | null
           description?: string | null
           id?: number
+          key?: string | null
           publish_date?: string | null
           status?: number
           title?: string | null

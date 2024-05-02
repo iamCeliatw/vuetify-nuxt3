@@ -61,7 +61,7 @@ const handlePopup = () => {
   errorMessage.value.visable = false;
 }
 
-const tagsList = ref<Database['public']['Tables']['tags']['Row'][]>([])
+const tagsList = ref<Database['public']['Tables']['tags']['Row'][] | null>([])
 const { getData, deleteData } = useFetchApi();
 
 const tagHandler = async () => {
@@ -139,12 +139,15 @@ const deleteItem = async (item:Database['public']['Tables']['tags']['Row']) => {
         title: 'failed!',
         visable: true,
         }
-      // alert('This tag is used in articles, please remove the tag from the article first')
       return
     }
     const filter:FilterCondition<'tags'>[] =  [{ column: 'id', operator: 'eq', value: item.id }];
     await deleteData('tags', filter)
-    tagsList.value = tagsList.value?.filter((tag) => tag.id !== item.id);
+    if(tagsList.value){
+      tagsList.value = tagsList.value?.filter((tag) => tag.id !== item.id);
+    } else {
+      await tagHandler()
+    }
   }catch(e){
     console.log('error:', e);
   }
