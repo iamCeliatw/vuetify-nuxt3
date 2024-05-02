@@ -10,7 +10,7 @@ ClientOnly
 </template>
 <script setup lang="ts">
 import Giscus from '@giscus/vue'
-import { VCodeBlock } from '@wdns/vue-code-block';
+// import { VCodeBlock } from '@wdns/vue-code-block';
 
 const code = ref(`const foo = 'bar';`);
 
