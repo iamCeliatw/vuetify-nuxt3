@@ -1,6 +1,6 @@
 <template lang="pug">
 HomepageNavbar
-HomepageMainSection
+HomepageMainSection(:articles="articles" :pending="pending" :error="error")
 </template>
 
 <script setup lang="ts">
@@ -12,6 +12,7 @@ const articleList = ref<Database['public']['Tables']['articles']['Row'][] | null
 const router = useRouter()
 const { data: articles, pending, error, refresh } = useAsyncData('articlesData', async () => {
   const { data, error } = await supabase.from('articles').select()
+  console.log(articles.value)
   if (error) {
     console.error('Failed to fetch articles:', error.message)
     throw error

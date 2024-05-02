@@ -6,7 +6,6 @@ QuillEditor(theme="snow",
   contentType="html",
   :options="data.editorOption"
   )
-
 </template>
 
 <script setup>

@@ -16,7 +16,8 @@ nav.navbar__wrapper
 
 <style lang="sass" scoped>
 .navbar__wrapper
-  width: 1200px
+  width: 100%
+  max-width: 1200px
   height: 90px
   display: flex
   justify-content: center
