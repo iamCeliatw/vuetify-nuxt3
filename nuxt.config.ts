@@ -2,12 +2,12 @@
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
   css: ["@/assets/main.sass"],
-  runtimeConfig: {
-    public: {
-      serverUrl: process.env.NUXT_SUPABASE_URL,
-      clientUrl: process.env.NUXT_SUPABASE_KEY,
-    },
-  },
+  // runtimeConfig: {
+  //   public: {
+  //     serverUrl: process.env.NUXT_SUPABASE_URL,
+  //     clientUrl: process.env.NUXT_SUPABASE_KEY,
+  //   },
+  // },
   
   devtools: { enabled: true },
   build: {
@@ -22,7 +22,13 @@ export default defineNuxtConfig({
       })
     },
     '@pinia/nuxt', '@nuxtjs/supabase',
+    '@nuxtjs/color-mode'
+
   ],
+  colorMode: {
+    preference: 'dark',
+    fallback: 'dark',
+  },
   vite: {
     vue: {
       template: {

@@ -6,6 +6,10 @@ HomepageMainSection(:articles="articles" :pending="pending" :error="error")
 <script setup lang="ts">
 import { indexStore } from '../store/index'
 import type { Database } from '../types/supabase'
+const colorMode = useColorMode()
+
+
+// colorMode.preference = 'dark'
 //home page 放留言板 介紹 連結
 const supabase = useSupabaseClient()
 const articleList = ref<Database['public']['Tables']['articles']['Row'][] | null>([])

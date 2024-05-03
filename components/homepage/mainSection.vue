@@ -14,7 +14,6 @@ section.main__wrapper
 
 <script lang="ts" setup>
 import type { Database } from '~/types/supabase';
-const router = useRouter()
 const props = defineProps<{
   articles: Database['public']['Tables']['articles']['Row'][]
   pending: boolean
@@ -24,9 +23,8 @@ console.log(props.articles,"props~");
 const goToArticle = (key: string) => {
   console.log(key);
   window.location.href = `/article/${key}`
-  // router.push(`/article/${key}`)
 } 
-const dateFormat = (originalDate: string) => {
+const dateFormat = (originalDate: string | number | Date) => {
   const date = new Date(originalDate)
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
@@ -51,6 +49,7 @@ const dateFormat = (originalDate: string) => {
   &__container
     display: flex
     flex-direction: column
+
   &__content
     font-size: 20px
     margin-top: 20px

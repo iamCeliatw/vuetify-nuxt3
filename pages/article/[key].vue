@@ -9,6 +9,10 @@ section.article__wrapper
 <script lang='ts' setup>
 import { indexStore } from "../../store/index";
 import type { Database } from '~/types/supabase';
+// definePageMeta({
+//   colorMode: 'dark',
+// })
+
 
 //home page 放留言板 介紹 連結
 const supabase = useSupabaseClient()
