@@ -17,6 +17,7 @@ const router = useRouter()
 const { data: articles, pending, error, refresh } = useAsyncData('articlesData', async () => {
   const { data, error } = await supabase.from('articles').select()
   console.log(articles.value)
+  
   if (error) {
     console.error('Failed to fetch articles:', error.message)
     throw error

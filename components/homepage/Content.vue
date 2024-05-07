@@ -1,12 +1,17 @@
 <template lang='pug'>
 .content__wrapper 
   .content__container
-    h1.article__title {{ articleData.title }}
-    p.article__description {{ articleData.description }}
-    span {{ tags }}
-    ClientOnly
-      p.article__content(v-html="articleData.content")
-
+    h1.article__title 
+      p {{ articleData.title }}
+      p {{ formatDate(articleData.publish_date) }}
+    section.article__content
+      .article__content--main 
+        p.description(v-html="articleData.description")
+        ClientOnly
+          p.content(v-html="articleData.content")
+      .article__content--info 
+        .article__tags 
+          span.tag(v-for="tag in tags" :key="tag.id") {{ tag.name }}
 </template>
 
 <script lang='ts' setup>
@@ -19,6 +24,11 @@ const props = defineProps<{
 }>()
 console.log(props.articleData, 'articleData');
 const supabase = useSupabaseClient()
+
+const formatDate = (originalDate) => {
+  const date = new Date(originalDate)
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
 
 useHead({
   meta: [
@@ -70,4 +80,38 @@ onMounted(() => {
 .content__container
   width: 50% 
   margin: 0 auto
+.article__title
+  justify-content: center
+  align-items: center
+  display: flex
+  flex-direction: column
+  height: 150px
+  gap: 15px
+  border-bottom: 1px solid #666
+.article__content
+  width: 100%
+  display: flex
+  margin: 20px 0
+.article__content--main 
+  width: 70%
+  margin-right: 20px
+.article__content--info
+  width: 30%
+  display: flex
+  flex-direction: column
+  gap: 20px
+  .article__tags
+    display: flex
+    flex-wrap: wrap
+    gap: 10px
+    .tag
+      padding: 5px 10px
+      border-radius: 5px
+      background-color: #666
+      color: #fff
+      font-size: 14px
+      cursor: pointer
+      &:hover
+        background-color: #333
+        color: #fff
 </style>
