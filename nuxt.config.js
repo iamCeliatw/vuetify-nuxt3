@@ -22,9 +22,18 @@ export default defineNuxtConfig({
       })
     },
     '@pinia/nuxt', '@nuxtjs/supabase',
-    '@nuxtjs/color-mode'
-
+    '@nuxtjs/color-mode',
+    '@zadigetvoltaire/nuxt-gtm',
+    'nuxt-gtag',
   ],
+  gtag: {
+    id: 'G-D5BG0PXWCQ'
+  },
+  gtm: {
+    id: `GTM-KCZKSVHP`,
+    enabled: true,
+    pageTracking: true
+  },
   colorMode: {
     preference: 'dark',
     fallback: 'dark',

@@ -35,29 +35,27 @@ export function useFetchApi () {
   }
 
   async function deleteData<T extends keyof Database['public']['Tables']>(
-      tableName: T,
-      filters?: FilterCondition<T>[]
-    ):Promise<void | null> {
-    let query = supabase.from(tableName as keyof Database['public']['Tables']).delete()
-    if (filters) {
-      filters.forEach(filter => {
-        const { column, operator, value } = filter;
-        query = (query[operator] as any)(column, value);
+    tableName: T,
+    filters?: FilterCondition<T>[]
+  ): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      let query = supabase.from(tableName as keyof Database['public']['Tables']).delete()
+      if (filters) {
+        filters.forEach(filter => {
+          const { column, operator, value } = filter;
+          query = (query[operator] as any)(column, value);
+        });
+      }
+      query.then(({ error }) => {
+        if (error) {
+          console.error('Error fetching data:', error.message);
+          reject(error);
+        } else {
+          resolve();
+        }
       });
-    }
-    const { error } = await query;
-    if (error) {
-      console.error('Error fetching data:', error.message);
-      return null;
-    }
+    });
   }
-
 
   return { getData, deleteData }; 
 }
-
-
-export const getRow = () => {}
-export const postRow = () => {}
-export const putRow = () => {}
-export const deleteRow = () => {}

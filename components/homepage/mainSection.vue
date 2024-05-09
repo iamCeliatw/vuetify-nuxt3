@@ -23,18 +23,18 @@ interface Articles {
   description: string
 }
 const props = defineProps<{
-  articles: array
+  articles: Articles[]
   pending: boolean
   error: Error | null
 }>()
 console.log(props.articles,"props~");
-const articlesByYear = ref<Record<string, Articles[]>>({})
+const articlesByYear = ref<{ year: string; articles: unknown; }[]>([])
 
 watchEffect(() => {
   console.log(props.articles, 'watchEffect logged');
   if (props.articles) {
     // 使用 reduce 進行數據分組
-    const groupedByYear = props.articles.reduce((acc, article) => {
+    const groupedByYear = props.articles.reduce((acc: { [x: string]: any[]; }, article: { publish_date: string; }) => {
       const year = article.publish_date.split('-')[0];
       if (!acc[year]) {
         acc[year] = [];
@@ -93,7 +93,7 @@ const dateFormat = (originalDate: string | number | Date) => {
 .article__desc
   margin-top: 10px 
 .article__items--container
-  border-left: 1px solid rgba(255, 255, 255 , .3)
+  border-left: 1px solid var(--border-color)
 .article__items
   margin-bottom: 10px
   padding-left: 25px
@@ -101,7 +101,7 @@ const dateFormat = (originalDate: string | number | Date) => {
   transition: all .2s
   border-left: 1px solid rgba(255, 255, 255, 0)
   &:hover
-    border-left: 1px solid rgba(255, 255, 255)
+    border-left: 2px solid var(--border-color)
 .article__date
   font-size: 14px
 .date

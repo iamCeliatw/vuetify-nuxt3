@@ -2,7 +2,7 @@
 nav.navbar__wrapper 
   .navbar__container
     ul.navigate__section
-      li(v-for="nav in navigate" :key="nav", @click="redirect(nav.url)") {{ nav.name }}
+      li(v-for="nav in navigate" :key="nav", @click="() => router.push(nav.url)") {{ nav.name }}
     .button__section 
       .github__icon 
         img(src="/github.png")
@@ -11,9 +11,10 @@ nav.navbar__wrapper
 </template>
 
 <script lang="ts" setup>
+const router = useRouter()
 const navigate = ref([
-{ name: 'Home', url: '/' },
-{ name: 'About', url: '/about' },
+{ name: '文章', url: '/' },
+{ name: '關於我', url: '/about' },
 ])
 const redirect = (url: string) => {
   console.log(url, 'url');
@@ -22,8 +23,7 @@ const redirect = (url: string) => {
 
 <style lang="sass" scoped>
 .navbar__wrapper
-  width: 100%
-  max-width: 800px
+  width: 65%
   height: 90px
   display: flex
   justify-content: center
@@ -43,6 +43,7 @@ const redirect = (url: string) => {
     margin-right: 20px
     font-weight: 500
     font-size: 20px
+    cursor: pointer   
     // color: var(--text-color)
 .button__section
   // flex: 1

@@ -13,7 +13,7 @@
 <script lang='ts' setup>
 const colorMode = useColorMode()
 const changeMode = () => {
-  console.log(colorMode,)
+  console.log(colorMode)
   colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
 }
 </script> 

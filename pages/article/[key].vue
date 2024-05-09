@@ -21,6 +21,7 @@ const route = useRoute()
 console.log(route.params.key, 'route');
 const fetchArticles = async (key:string[] | string) => {
   const { data, error } = await supabase.from('articles').select().eq('key', key);
+  console.log(data,"data~");
   if (error) {
     console.error('Failed to fetch articles:', error.message);
     throw new Error('Failed to fetch articles');

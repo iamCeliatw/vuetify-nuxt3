@@ -14,6 +14,7 @@ definePageMeta({
   middleware: 'auth',
   colorMode: 'light'
 });
+// colorMode.preference = 'light'
 </script>
 
 <style lang="sass" scoped>

@@ -17,6 +17,9 @@ ClientOnly
 
 <script lang='ts' setup>
 const supabase = useSupabaseClient()
+definePageMeta({
+  colorMode: 'light'
+});
 const STORAGE_BUCKET = 'article';
 type Image = {
   image: string,

@@ -4,13 +4,16 @@
     h1.article__title 
       p {{ articleData.title }}
       p {{ formatDate(articleData.publish_date) }}
+      .count__container
+        img(src="/eyes.png" alt="tag", height="100") 
+        span.article__count view: {{ articleData.count }}
     section.article__content
       .article__content--main 
         p.description(v-html="articleData.description")
         ClientOnly
           p.content(v-html="articleData.content")
       .article__content--info 
-        .article__tags 
+        .article__tags
           span.tag(v-for="tag in tags" :key="tag.id") {{ tag.name }}
 </template>
 
@@ -25,22 +28,11 @@ const props = defineProps<{
 console.log(props.articleData, 'articleData');
 const supabase = useSupabaseClient()
 
-const formatDate = (originalDate) => {
+const formatDate = (originalDate:string) => {
   const date = new Date(originalDate)
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-useHead({
-  meta: [
-    { property: 'og:title', content: props.articleData.title },
-    { property: 'og:description', content: props.articleData.description  },
-    // ...props.articleData.tags.map(tag => ({   name: 'keywords', content: tag })),
-  ],
-})
-
-
-
-const allTags = ref<Database['public']['Tables']['tags']['Row'][] | null>([])
 const { data: tags, pending: tagPending, error: tagError, refresh: tagRefresh } = useAsyncData('tagsData', async () => {
   const { data, error } = await supabase.from('tags').select()
   if (error) {
@@ -50,8 +42,22 @@ const { data: tags, pending: tagPending, error: tagError, refresh: tagRefresh } 
   return data
 })
 
+useHead({
+  meta: [
+    { property: 'og:title', content: props.articleData.title },
+    { property: 'og:description', content: props.articleData.description  },
+    //keywords
+    // ...(tags.value?.map(tag => ({ name: 'keywords', content: tag.name })) || []),
+    // ...props.articleData.tags.map(tag => ({   name: 'keywords', content: tag })),
+    ...(tags.value?.map(tag => ({ name: 'keywords', content: tag.name })) || []),
+  ],
+})
 
-const { data: articleTagsList, pending, error, refresh } = useAsyncData('tagData', async () => {
+
+
+const allTags = ref<Database['public']['Tables']['tags']['Row'][] | null>([])
+
+const { data: articleTagsList, pending, error, refresh } = useAsyncData<Database['public']['Tables']['tags']['Row'] | undefined>('tagData', async () => {
   const { data, error } = await supabase
     .from('article_tag')
     .select('tag_id')
@@ -67,8 +73,13 @@ const { data: articleTagsList, pending, error, refresh } = useAsyncData('tagData
     }
     return tags
 })
-onMounted(() => {
+onMounted(async() => {
   hljs.highlightAll();
+  //call api count +1
+   
+  if (props.articleData.count !== null) {
+    await supabase.from('articles').update({ count: props.articleData.count + 1 }).eq('id', props.articleData.id)
+  }
 })
 
 </script>
@@ -78,7 +89,7 @@ onMounted(() => {
   width: 100%
   height: 100%
 .content__container
-  width: 50% 
+  width: 65% 
   margin: 0 auto
 .article__title
   justify-content: center
@@ -114,4 +125,13 @@ onMounted(() => {
       &:hover
         background-color: #333
         color: #fff
+.article__count
+  font-size: 13px
+.count__container
+  display: flex
+  gap: 5px
+  align-items: center
+  img
+    width: 20px
+    height: 20px
 </style>
