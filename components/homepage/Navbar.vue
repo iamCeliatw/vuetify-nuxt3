@@ -1,10 +1,8 @@
 <template lang="pug">
 nav.navbar__wrapper 
   .navbar__container
-    ul.navigate__section      
-      li home 
-      li about
-      li contact
+    ul.navigate__section
+      li(v-for="nav in navigate" :key="nav", @click="() => router.push(nav.url)") {{ nav.name }}
     .button__section 
       .github__icon 
         img(src="/github.png")
@@ -12,12 +10,20 @@ nav.navbar__wrapper
         //- HomepageSvgSunIcon
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const router = useRouter()
+const navigate = ref([
+{ name: '文章', url: '/' },
+{ name: '關於我', url: '/about' },
+])
+const redirect = (url: string) => {
+  console.log(url, 'url');
+}
+</script>
 
 <style lang="sass" scoped>
 .navbar__wrapper
-  width: 100%
-  max-width: 1200px
+  width: 65%
   height: 90px
   display: flex
   justify-content: center
@@ -37,7 +43,8 @@ nav.navbar__wrapper
     margin-right: 20px
     font-weight: 500
     font-size: 20px
-    color: var(--text-color)
+    cursor: pointer   
+    // color: var(--text-color)
 .button__section
   // flex: 1
   display: flex

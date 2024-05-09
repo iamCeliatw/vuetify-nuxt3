@@ -9,7 +9,7 @@ ClientOnly
         template(v-slot:item.actions="{ item }")
           v-btn(small, color="primary" @click="editItem(item)" class="mr-4")
             | edit
-          v-btn(small, color="error" @click="deleteDialog = true")
+          v-btn(small, color="error" @click="openDeleteDialog(item)")
             | delete
       v-row(justify="center" align="center" v-if="loading")
         v-progress-circular(indeterminate :size="40")
@@ -17,12 +17,25 @@ ClientOnly
         v-card(max-width="400" prepend-icon="mdi-update" text="Are you sure to delete this article?")
           template(v-slot:actions)
             v-btn(class="ms-auto" text="Ok" @click="deleteArticle(item)")
-            v-btn(class="ms-auto" text="Ok" @click="deleteDialog = false")
+            v-btn(class="ms-auto" text="Close" @click="deleteDialog = false")
+    .alert__popup
+      v-alert(
+        closable
+        v-model="errorMessage.visable"
+        :title="errorMessage.title"
+        :text="errorMessage.text"
+        type="error"
+        class="alert__padding"
+      )
 </template>
 
 <script setup lang="ts">
 import type { Database } from '~/types/supabase';
 import { useFetchApi, type FilterCondition } from "../../../composables/supabase-api";
+
+definePageMeta({
+  colorMode: 'light'
+});
 const supabase = useSupabaseClient()
 const router = useRouter()
 const search = ref('')
@@ -37,7 +50,16 @@ const headers = ref([
 const loading = ref(true)
 const deleteDialog = ref(false)
 const articleList = ref<Database['public']['Tables']['articles']['Row'][] | null>([])
-
+  type ErrorMessage = {
+  text: string,
+  title: string,
+  visable: boolean,
+}
+const errorMessage = ref<ErrorMessage>({
+  text: '',
+  title: '',
+  visable: false,
+})
 const addItem = () => {
   router.push('/admin/posts/edit')
 }
@@ -52,13 +74,30 @@ const articleDataHandler = async () => {
   loading.value = false
 }
 const selectedItem = ref<Database['public']['Tables']['articles']['Row']>()
-
+const openDeleteDialog = (item: Database['public']['Tables']['articles']['Row']) => { // 新增這個函數
+  selectedItem.value = item
+  deleteDialog.value = true
+}
 const deleteArticle = async () => {
+  console.log(selectedItem.value);
   if(selectedItem.value && articleList.value){ 
     const filter:FilterCondition<'articles'>[] =  [{ column: 'id', operator: 'eq', value: selectedItem.value.id }];
-    await deleteData('articles', filter)
-    articleList.value = articleList.value?.filter((article) => article.id !== selectedItem.value?.id)
-    deleteDialog.value = false
+    try {
+      await deleteData('articles', filter);
+      articleList.value = articleList.value?.filter((article) => article.id !== selectedItem.value?.id)
+      deleteDialog.value = false
+    } catch (error) {
+      console.log(error);
+      deleteDialog.value = false
+      if ((error as any)?.code === "23503") {
+        errorMessage.value = {
+          text: 'This article is in use, cannot be deleted!',
+          title: 'failed!',
+          visable: true,
+        }
+      }
+    }
+
   }
 }
 onMounted(async() => {

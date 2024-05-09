@@ -4,23 +4,18 @@
     input(type="checkbox" name="check" id="check" @change="changeMode")
     label(for="check")
       .box
-        .ball(:style="{transform: darkMode ? 'translatex(100%)' : 'translatex(0%)'}")
+        .ball(:style="{transform: colorMode.value === 'dark' ? 'translatex(100%)' : 'translatex(0%)'}")
         .scenary
           HomepageSvgMoonIcon
           HomepageSvgSunIcon
 </template>
 
 <script lang='ts' setup>
-const darkMode = ref(false)
+const colorMode = useColorMode()
 const changeMode = () => {
-  darkMode.value = !darkMode.value
-  console.log('changeMode', darkMode.value);
-  document.documentElement.style.setProperty('--text-color', darkMode.value ? '#FFF' : '#000');
-  document.documentElement.style.setProperty('--background-color', darkMode.value ? '#000' : '#FFF');
-  document.documentElement.style.setProperty('--box-color', darkMode.value ? '#FFF' : '#000');
-  document.documentElement.style.setProperty('--border-color', darkMode.value ? '#D0D0D0' : '#696969');
+  console.log(colorMode)
+  colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
 }
-
 </script> 
 
 <style lang='sass' scoped>

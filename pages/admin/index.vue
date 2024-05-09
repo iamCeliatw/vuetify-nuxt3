@@ -9,11 +9,12 @@ ClientOnly
 import { reactive, ref } from "vue";
 
 const supabase = useSupabaseClient()
-
+const colorMode = useColorMode()
 definePageMeta({
   middleware: 'auth',
+  colorMode: 'light'
 });
-
+// colorMode.preference = 'light'
 </script>
 
 <style lang="sass" scoped>

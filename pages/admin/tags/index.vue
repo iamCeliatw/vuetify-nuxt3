@@ -42,6 +42,9 @@ ClientOnly
 <script lang='ts' setup>
 import type { Database,Tables } from '../../../types/supabase';
 import { useFetchApi } from "../../../composables/supabase-api";
+definePageMeta({
+  colorMode: 'light'
+});
 const supabase = useSupabaseClient<Database>()
 const dialog =  ref(false)
 const loading = ref(true) 
@@ -50,6 +53,7 @@ const loading = ref(true)
   { text: 'actions', value: 'actions', sortable: false },
 ])
 const isEditing = ref(false)
+
 const editTag = ref({
   id: 0,
   name: '',

@@ -25,6 +25,9 @@
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@nuxtjs/color-mode": "^3.4.1",
+    "@zadigetvoltaire/nuxt-gtm": "^0.0.13",
+    "nuxt-gtag": "^2.0.5",
     "sass": "^1.72.0",
     "sass-loader": "^14.1.1",
     "typescript": "^5.4.3",

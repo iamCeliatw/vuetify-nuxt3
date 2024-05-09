@@ -9,6 +9,10 @@ section.article__wrapper
 <script lang='ts' setup>
 import { indexStore } from "../../store/index";
 import type { Database } from '~/types/supabase';
+// definePageMeta({
+//   colorMode: 'dark',
+// })
+
 
 //home page 放留言板 介紹 連結
 const supabase = useSupabaseClient()
@@ -17,6 +21,7 @@ const route = useRoute()
 console.log(route.params.key, 'route');
 const fetchArticles = async (key:string[] | string) => {
   const { data, error } = await supabase.from('articles').select().eq('key', key);
+  console.log(data,"data~");
   if (error) {
     console.error('Failed to fetch articles:', error.message);
     throw new Error('Failed to fetch articles');
