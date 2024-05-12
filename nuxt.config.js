@@ -1,14 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
-  css: ["@/assets/main.sass"],
+  css: ['@/assets/main.sass'],
   // runtimeConfig: {
   //   public: {
   //     serverUrl: process.env.NUXT_SUPABASE_URL,
   //     clientUrl: process.env.NUXT_SUPABASE_KEY,
   //   },
   // },
-  
+
   devtools: { enabled: true },
   build: {
     transpile: ['vuetify'],
@@ -21,18 +21,19 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    '@pinia/nuxt', '@nuxtjs/supabase',
+    '@pinia/nuxt',
+    '@nuxtjs/supabase',
     '@nuxtjs/color-mode',
     '@zadigetvoltaire/nuxt-gtm',
     'nuxt-gtag',
   ],
   gtag: {
-    id: 'G-D5BG0PXWCQ'
+    id: 'G-D5BG0PXWCQ',
   },
   gtm: {
     id: `GTM-KCZKSVHP`,
     enabled: true,
-    pageTracking: true
+    pageTracking: true,
   },
   colorMode: {
     preference: 'dark',
@@ -54,16 +55,16 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'supabase-nuxt',
+      title: `Celia's blog`,
     },
   },
-  supabase:{
+  supabase: {
     redirectOptions: {
       login: '/login',
       callback: '/admin',
       // include: ['/admin'],
-      exclude: ['/','/admin(/*)?','/article(/*)?'],
+      exclude: ['/', '/admin(/*)?', '/article(/*)?'],
       cookieRedirect: false,
-    }
+    },
   },
 })
