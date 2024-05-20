@@ -6,6 +6,7 @@
     "esModuleInterop": true,  
     "skipLibCheck": true,         
     "forceConsistentCasingInFileNames": true,
+    "types": ["vitest/globals", "node"]
   },
       
   "extends": "./.nuxt/tsconfig.json", // 讀得到 ref 
@@ -16,9 +17,11 @@
     "src/**/*.vue",
     "env.d.ts",
     ".nuxt/nuxt.d.ts", // 讀得到 ref
-    "**/*" // 讀得到 ref
+    "**/*", // 讀得到 ref
+    "vitest.config.ts",
   ],
   "exclude": [ // 指定排除的文件
   "node_modules"
-  ]
+  ],
+  
 }

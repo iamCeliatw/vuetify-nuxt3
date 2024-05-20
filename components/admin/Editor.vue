@@ -35,12 +35,26 @@ const quillEditor = ref(null)
 const emit = defineEmits(['update:modelValue', 'updateValue']);
 watch(() => store.selectedImage, (newValue, oldValue) => {
   if (newValue && quillEditor.value) {
-    let length = quillEditor.value.getQuill().getLength();
+    let quill = quillEditor.value.getQuill();
+    let length = quill.getLength();
     console.log(newValue, oldValue, length);
-    quillEditor.value.getQuill().insertEmbed(length, 'image', newValue.image);
-    store.selectedImage = null;
+
+    // 插入圖片
+    quill.insertEmbed(length, 'image', newValue.image);
+    let fileName = newValue.name.substring(0, newValue.name.lastIndexOf('.'));
+
+    // 查找剛插入的圖片並設置 alt 屬性
+    let delta = quill.getContents();
+    let ops = delta.ops;
+    for (let i = 0; i < ops.length; i++) {
+      if (ops[i].insert && ops[i].insert.image === newValue.image) {
+        quill.formatText(i, 1, 'alt', fileName);
+        break;
+      }
+    }
   }
 });
+
 
 const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'],

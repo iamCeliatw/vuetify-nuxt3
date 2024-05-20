@@ -1,0 +1,55 @@
+@mixin breakPoint($size,$rotate)
+  @if $size == size-1920
+    @media only screen and (max-width: 1920px) and (orientation :$rotate)
+      @content
+  @else if $size == size-1919
+    @media only screen and (max-width: 1919px) and (orientation :$rotate)
+      @content
+  @else if $size == size-1440
+    @media only screen and (max-width: 1440px) and (orientation :$rotate)
+      @content
+  @else if $size == size-1280
+    @media only screen and (max-width: 1280px) and (orientation :$rotate)
+      @content
+  @else if $size == size-1080
+    @media screen and (max-width: 1080px)
+      @content
+  @else if $size == size-1024
+    @media screen and (max-width: 1024px)
+      @content
+  @else if $size == size-768
+    @media only screen and (max-width: 768px)
+      @content
+  @else if $size == size-767
+    @media only screen and (max-width: 767px)
+      @content
+  @else if $size == size-570
+    @media only screen and (max-width: 570px)
+      @content
+  @else if $size == size-512
+    @media only screen and (max-width: 512px)
+      @content
+  @else if $size == size-430
+    @media only screen and (max-width: 430px)
+      @content
+  @else if $size == size-414
+    @media only screen and (max-width: 414px)
+      @content
+  @else if $size == size-375
+    @media only screen and (max-width: 375px)
+      @content
+  @else if $size == size-320
+    @media only screen and (max-width: 320px)
+      @content
+  @else if $size == H-936
+    @media only screen and (max-height: 936px)
+      @content
+  @else if $size == H-900
+    @media only screen and (max-height: 900px)
+      @content
+  @else if $size == H-780
+    @media only screen and (max-height: 780px)
+      @content
+  @else if $size == H-540
+    @media only screen and (max-height: 540px)
+      @content

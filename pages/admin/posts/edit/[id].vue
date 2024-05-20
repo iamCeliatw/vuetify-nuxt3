@@ -10,10 +10,10 @@ ClientOnly
         v-text-field(type="date" label="Date" v-model="state.publish_date" )
         AdminEditor(@updateValue="handleContent", :content="state.content" v-model="state.content")
         v-autocomplete.my-4(v-model="selectedTags" multiple clearable chips label="tags" :items="tagsList" varient="solo" item-title="name" item-value="id")
-        v-switch(v-model="state.status" :label='state.status ? "上架" : "下架" ' hide-details inset required)
+        v-switch(v-model="state.status" :label='state.status ? "上架" : "下架" ' hide-details inset required :color="state.status ? 'success' : 'error'")
         .my-4
         v-btn(class="me-4" @click="submitHandler") submit
-        v-btn(@click="clear") clear
+        v-btn(@click="cancel") cancel
         .alert__popup(v-if="submitPopupOpen && formSuccess")
           v-alert(closable
             v-model="formSuccess"
@@ -50,6 +50,7 @@ type Image = {
 const imagesList = ref<Image[]>([])
 const loading = ref(true)
 const store = indexStore();
+const router = useRouter()
 const { getData } = useFetchApi();
 const supabase = useSupabaseClient<Database>()
 const route = useRoute()
@@ -253,6 +254,7 @@ const submitHandler = async () => {
       await updateArticleTags(Number(route.params.id), selectedTags.value ?? []);
       formSuccess.value = !error;
       submitPopupOpen.value = true;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       console.log(formSuccess.value, 'formSuccess', submitPopupOpen.value, 'submitPopupOpen');
       } catch(e) {
         console.log(e);
@@ -265,6 +267,10 @@ const clear = () => {
   for (const [key, value] of Object.entries(initialState)) {
     (state as Record<string, typeof value>)[key] = value
   }
+}
+
+const cancel = () => {
+  router.push('/admin/posts')
 }
 </script>
 

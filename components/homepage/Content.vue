@@ -9,12 +9,16 @@
         span.article__count view: {{ articleData.count }}
     section.article__content
       .article__content--main 
-        p.description(v-html="articleData.description")
+        //- p.description(v-html="articleData.description")
         ClientOnly
           p.content(v-html="articleData.content")
       .article__content--info 
+        ClientOnly
+        .article__outline 大綱
+          p(v-for="h2 in h2Array") {{ h2 }}
         .article__tags
           span.tag(v-for="tag in tags" :key="tag.id") {{ tag.name }}
+
 </template>
 
 <script lang='ts' setup>
@@ -43,20 +47,29 @@ const { data: tags, pending: tagPending, error: tagError, refresh: tagRefresh } 
 })
 
 useHead({
+  title: props.articleData.title,
   meta: [
     { property: 'og:title', content: props.articleData.title },
-    { property: 'og:description', content: props.articleData.description  },
-    //keywords
-    // ...(tags.value?.map(tag => ({ name: 'keywords', content: tag.name })) || []),
-    // ...props.articleData.tags.map(tag => ({   name: 'keywords', content: tag })),
-    ...(tags.value?.map(tag => ({ name: 'keywords', content: tag.name })) || []),
+    { property: 'og:description', content: props.articleData.description },
   ],
 })
 
-
-
+const getContentOutline = (content:string | null) => {
+  if(!content || process.server) return []
+    // 創建 DOMParser 
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    const h2Elements = doc.querySelectorAll('h2');
+    const h2Contents: (string | null)[] = [];
+    h2Elements.forEach(h2 => {
+        h2Contents.push(h2.textContent);
+    });
+    // 返回包含所有 <h2> 文字內容的陣列
+    return h2Contents;
+}
+const h2Array = computed(() => getContentOutline(props.articleData.content))
 const allTags = ref<Database['public']['Tables']['tags']['Row'][] | null>([])
-
+// @ts-ignore
 const { data: articleTagsList, pending, error, refresh } = useAsyncData<Database['public']['Tables']['tags']['Row'] | undefined>('tagData', async () => {
   const { data, error } = await supabase
     .from('article_tag')
@@ -74,23 +87,31 @@ const { data: articleTagsList, pending, error, refresh } = useAsyncData<Database
     return tags
 })
 onMounted(async() => {
+  
   hljs.highlightAll();
   //call api count +1
-   
+
   if (props.articleData.count !== null) {
-    await supabase.from('articles').update({ count: props.articleData.count + 1 }).eq('id', props.articleData.id)
+    const { data, error } = await supabase.from('articles').update(
+      // @ts-ignore
+      { count: props.articleData.count + 1 }
+    ).eq('id', props.articleData.id)
   }
 })
 
 </script>
 
 <style lang='sass' scoped>
+@import "../../assets/breakpoint"
 .content__wrapper 
   width: 100%
   height: 100%
 .content__container
   width: 65% 
   margin: 0 auto
+  @include breakPoint(size-768 ,null)
+    width: 90%
+
 .article__title
   justify-content: center
   align-items: center
@@ -103,14 +124,21 @@ onMounted(async() => {
   width: 100%
   display: flex
   margin: 20px 0
+  @include breakPoint(size-768 ,null)
+    flex-direction: column-reverse
+    
 .article__content--main 
   width: 70%
   margin-right: 20px
+  @include breakPoint(size-768 ,null)
+    width: 100%
 .article__content--info
   width: 30%
   display: flex
   flex-direction: column
   gap: 20px
+  @include breakPoint(size-768 ,null)
+    width: 100%
   .article__tags
     display: flex
     flex-wrap: wrap

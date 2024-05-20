@@ -11,10 +11,12 @@ nav.navbar__wrapper
 </template>
 
 <script lang="ts" setup>
+
 const router = useRouter()
 const navigate = ref([
 { name: '文章', url: '/' },
 { name: '關於我', url: '/about' },
+{ name: '分類', url:'/category'}
 ])
 const redirect = (url: string) => {
   console.log(url, 'url');
@@ -22,12 +24,16 @@ const redirect = (url: string) => {
 </script>
 
 <style lang="sass" scoped>
+@import "../../assets/breakpoint"
+
 .navbar__wrapper
   width: 65%
   height: 90px
   display: flex
   justify-content: center
   margin: 0 auto
+  @include breakPoint(size-768 ,null)
+    width: 90%
 .navbar__container
   padding: 0 20px
   display: flex
@@ -43,8 +49,12 @@ const redirect = (url: string) => {
     margin-right: 20px
     font-weight: 500
     font-size: 20px
-    cursor: pointer   
-    // color: var(--text-color)
+    cursor: pointer
+    height: 40px
+    line-height: 40px
+    &:hover
+      border-bottom: 2px solid 
+      border-color: #ebf4f1
 .button__section
   // flex: 1
   display: flex

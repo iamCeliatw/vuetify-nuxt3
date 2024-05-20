@@ -1,8 +1,8 @@
 <template lang="pug">
 ClientOnly
   NuxtLayout
-    .test
-      h1 admin
+    .admin__container
+      h1 Dashboard
 </template>
   
 <script setup lang="ts">
@@ -18,6 +18,7 @@ definePageMeta({
 </script>
 
 <style lang="sass" scoped>
-.test
-  color: red
+.admin__container
+  padding: 10px
+  // color: red
 </style>

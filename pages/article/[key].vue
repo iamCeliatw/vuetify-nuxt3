@@ -14,6 +14,7 @@ import type { Database } from '~/types/supabase';
 // })
 
 
+
 //home page 放留言板 介紹 連結
 const supabase = useSupabaseClient()
 const articleList = ref<Database['public']['Tables']['articles']['Row'][] | null>([])
@@ -28,10 +29,21 @@ const fetchArticles = async (key:string[] | string) => {
   }
   return data;
 };
+
+
+
 const key = ref(route.params.key)
-const { data: articles, pending, error, refresh } = useAsyncData('articlesData', () => fetchArticles(route.params.key), {
+const { data: articles, pending, error, refresh } = useAsyncData<Database['public']['Tables']['articles']['Row'][]>('articlesData', () => fetchArticles(route.params.key), {
   watch: [key]  
  });
+console.log(articles.value, 'articles');
+useHead({
+  title: articles.value ? articles.value[0].title : '',
+  meta: [
+    { property: 'og:title', content: articles.value ? articles.value[0].title : '' },
+    { property: 'og:description', content: articles.value ? articles.value[0].description : '' },
+  ],
+})
 </script>
 
 <style lang='sass' scoped>

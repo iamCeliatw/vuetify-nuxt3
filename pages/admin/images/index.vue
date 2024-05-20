@@ -7,7 +7,7 @@ ClientOnly
         input(id="fileInput" class="file" type="file" @change="uploadFile" accept="image/*")
     v-row(justify="center" align="center" v-if="loading")
       v-progress-circular(indeterminate :size="40")
-    v-data-table(:hover="true", :headers="headers", :items="imagesList" v-if="!loading")
+    v-data-table(:hover="true", :headers="headers", :items="imagesList" v-if="!loading" )
       template(v-slot:item.image="{ item }")
         img.image(:src="item.image", alt="Image", height="100")
       template(v-slot:item.actions="{ item }")
@@ -28,7 +28,7 @@ type Image = {
 const loading = ref(true)
 const imagesList = ref<Image[]>([])
   const headers = ref([
-  { text: 'image', value: 'image', title:'Image'},
+  { text: 'image', value: 'image', title:'Image',sortable: false},
   { text: 'actions', value: 'actions', sortable: false },
 ])
 
