@@ -8,7 +8,7 @@ const customDarkTheme = {
   colors: {
     background: "#FFFFFF",
     surface: "#F5F5F5",
-    "admin-layout": "#B71C1C",
+    "admin-layout": "#FFFFFF",
     "surface-bright": "#FFFFFF",
     "surface-light": "#EEEEEE",
     "surface-variant": "#424242",

@@ -1,26 +1,26 @@
 <template lang="pug">
 nav.navbar__wrapper 
   .navbar__container
-    ul.navigate__section
-      li(v-for="nav in navigate" :key="nav", @click="() => router.push(nav.url)") {{ nav.name }}
+    .navbar__title 
+      p Celia's note
     .button__section 
-      .github__icon 
-        img(src="/github.png")
-      HomepageLightModeButton
-        //- HomepageSvgSunIcon
+      ul.navigate__section
+        li(:class="{ 'active-route': router.currentRoute.value.path === nav.url }" v-for="nav in navigate" :key="nav", @click="() => router.push(nav.url)" ) {{ nav.name }}
+      //- .github__icon 
+      //-   img(src="/github.png")
+      .light__button
+        HomepageLightModeButton
 </template>
 
 <script lang="ts" setup>
-
+const colorMode = useColorMode()
 const router = useRouter()
 const navigate = ref([
-{ name: '文章', url: '/' },
-{ name: '關於我', url: '/about' },
-{ name: '分類', url:'/category'}
+{ name: 'post', url: '/' },
+{ name: 'about', url: '/about' },
+{ name: 'category', url:'/category'}
 ])
-const redirect = (url: string) => {
-  console.log(url, 'url');
-}
+
 </script>
 
 <style lang="sass" scoped>
@@ -34,6 +34,8 @@ const redirect = (url: string) => {
   margin: 0 auto
   @include breakPoint(size-768 ,null)
     width: 90%
+  @include breakPoint(size-512 ,null)
+    width: 100%
 .navbar__container
   padding: 0 20px
   display: flex
@@ -41,8 +43,9 @@ const redirect = (url: string) => {
   height: 100%
   justify-content: space-between
   align-items: center
+  @include breakPoint(size-768 ,null)
+    // padding: 0 10p
 .navigate__section
-  // flex: 2
   display: flex
   list-style-type: none
   li
@@ -52,14 +55,18 @@ const redirect = (url: string) => {
     cursor: pointer
     height: 40px
     line-height: 40px
+    transition: all .2s
     &:hover
       border-bottom: 2px solid 
-      border-color: #ebf4f1
+    @include breakPoint(size-768 ,null)
+      font-size: 16px
 .button__section
-  // flex: 1
   display: flex
   align-items: center
   gap: 10px
+  @include breakPoint(size-512 ,null)
+    width: 100%
+    justify-content: space-between
 .github__icon
   width: 30px
   height: 30px
@@ -68,4 +75,17 @@ const redirect = (url: string) => {
     width: 100%
     height: 100%
     object-fit: cover
+.active-route 
+  border-bottom: 2px solid
+.navbar__title 
+  p
+    font-size: 26px
+    @include breakPoint(size-768 ,null)
+      font-size: 20px
+    @include breakPoint(size-512 ,null)
+      display: none
+    // font-weight: 
+    // color: var(--text-color
+.light__button
+  width: auto
 </style>

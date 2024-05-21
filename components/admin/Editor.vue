@@ -86,7 +86,6 @@ const data = reactive({
 window.hljs = hljs;
 
 //為防止server端渲染時，找不到window對象，所以需要在client端渲染
-
 const setValue = async() => {
   await nextTick()
   emit('update:modelValue', content.value)

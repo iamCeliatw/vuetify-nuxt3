@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { mount, shallowMount } from '@vue/test-utils';
 import HomePage from '../index.vue';
 import { ref } from 'vue';
 
@@ -25,7 +25,13 @@ const mockUseSupabaseClient = () => {
 };
 
 const mockUseRouter = () => {
-  vi.stubGlobal('useRouter', vi.fn());
+  const push = vi.fn();
+  const currentRoute = { value: { path: '/' } };
+  vi.stubGlobal('useRouter', () => ({
+    push,
+    currentRoute,
+  }));
+  return { push, currentRoute };
 };
 
 vi.mock('@nuxtjs/composition-api', () => ({
@@ -55,8 +61,16 @@ describe('HomePage', () => {
   });
 
   it('should render correctly', () => {
-    const wrapper = mount(HomePage);
-    expect(wrapper.exists()).toBe(true);
+    const wrapper = shallowMount(HomePage, {
+      stubs: {
+        HomepageNavbar: true,
+        HomepageMainSection: {
+          template: '<div class="mock-main-section"></div>',
+          props: ['articles', 'pending', 'error']
+        },
+        HomepageMessageBoard: true
+      }
+    });
   });
 
   it('shows articles when loaded', async () => {

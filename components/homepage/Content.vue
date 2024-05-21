@@ -13,11 +13,11 @@
         ClientOnly
           p.content(v-html="articleData.content")
       .article__content--info 
+        //- .article__outline 大綱
+        //-   p(v-for="h2 in h2Array") {{ h2 }}
         ClientOnly
-        .article__outline 大綱
-          p(v-for="h2 in h2Array") {{ h2 }}
-        .article__tags
-          span.tag(v-for="tag in tags" :key="tag.id") {{ tag.name }}
+          .article__tags
+            span.tag(v-for="tag in articletagList" :key="tag.id") {{ tag.name }}
 
 </template>
 
@@ -29,7 +29,7 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
 const props = defineProps<{
   articleData: Database['public']['Tables']['articles']['Row']
 }>()
-console.log(props.articleData, 'articleData');
+// console.log(props.articleData, 'articleData');
 const supabase = useSupabaseClient()
 
 const formatDate = (originalDate:string) => {
@@ -69,6 +69,8 @@ const getContentOutline = (content:string | null) => {
 }
 const h2Array = computed(() => getContentOutline(props.articleData.content))
 const allTags = ref<Database['public']['Tables']['tags']['Row'][] | null>([])
+const articletagList = ref<Database['public']['Tables']['tags']['Row'][] | null>([])
+
 // @ts-ignore
 const { data: articleTagsList, pending, error, refresh } = useAsyncData<Database['public']['Tables']['tags']['Row'] | undefined>('tagData', async () => {
   const { data, error } = await supabase
@@ -79,12 +81,11 @@ const { data: articleTagsList, pending, error, refresh } = useAsyncData<Database
     console.error('Failed to fetch article tag data:', error);
     return;
     }
-    console.log(articleTagsList.value, props.articleData.id, 'articleTagsList');
+    // console.log(articleTagsList.value, props.articleData.id, 'articleTagsList');
     if(data){
       const tags = await supabase.from('tags').select().in('id', data.map((tag) => tag.tag_id))
-      console.log(tags.data, 'tags');
-    }
-    return tags
+      articletagList.value = tags.data
+   }
 })
 onMounted(async() => {
   

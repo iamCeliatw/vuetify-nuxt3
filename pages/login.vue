@@ -42,8 +42,9 @@ const signInWithEmail = async () => {
   } 
 }
 onMounted(async () => {
-  const user = await supabase.auth.getUser()
-  if (user) router.push('/admin') 
+  const data = await supabase.auth.getSession()
+  console.log(data,"user");
+  if (data.data.session?.user) router.push('/admin') 
 })
 </script>
 

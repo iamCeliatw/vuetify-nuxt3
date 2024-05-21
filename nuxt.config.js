@@ -48,7 +48,7 @@ export default defineNuxtConfig({
       login: '/login',
       callback: '/admin',
       // include: ['/admin'],
-      exclude: ['/','/admin(/*)?','/article(/*)?'],
+      exclude: ['/','/admin(/*)?','/article(/*)?','/about','/category(/*)?'],
       cookieRedirect: false,
     }
   },

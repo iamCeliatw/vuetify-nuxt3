@@ -71,6 +71,10 @@ const editItem = (item:{id:number}) => {
 const articleDataHandler = async () => {
   loading.value = true
   articleList.value = await getData('articles')
+  articleList.value?.sort((a, b) => 
+  new Date(b.publish_date ? b.publish_date : Date.now()).getTime() - 
+  new Date(a.publish_date ? a.publish_date : Date.now()).getTime()
+);
   loading.value = false
 }
 const selectedItem = ref<Database['public']['Tables']['articles']['Row']>()
