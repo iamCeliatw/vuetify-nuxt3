@@ -27,13 +27,10 @@ const props = defineProps<{
   pending: boolean
   error: Error | null
 }>()
-console.log(props.articles,"props~");
 const articlesByYear = ref<{ year: string; articles: unknown; }[]>([])
 
 watchEffect(() => {
-  console.log(props.articles, 'watchEffect logged');
   if (props.articles) {
-    // 使用 reduce 進行數據分組
     const groupedByYear = props.articles.reduce((acc: { [x: string]: any[]; }, article: { publish_date: string; }) => {
       const year = article.publish_date.split('-')[0];
       if (!acc[year]) {
@@ -42,14 +39,12 @@ watchEffect(() => {
       acc[year].push(article);
       return acc;
     }, {});
-
-    // 將 groupedByYear 對象轉換為陣列格式
     const articlesArray = Object.entries(groupedByYear).map(([year, articles]) => {
+      articles.sort((a: { publish_date: string; }, b: { publish_date: string; }) => new Date(b.publish_date).getTime() - new Date(a.publish_date).getTime());
       return { year: year, articles: articles };
     });
     articlesArray.sort((a, b) => Number(b.year) - Number(a.year));
-    articlesByYear.value = articlesArray;  // 更新響應式引用
-    console.log(articlesByYear.value, 'articlesByYear'); // Debug information
+    articlesByYear.value = articlesArray;
   }
 });
 
@@ -62,8 +57,6 @@ const dateFormat = (originalDate: string | number | Date) => {
   const date = new Date(originalDate)
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
-
-
 </script>
 
 <style lang="sass" scoped>
@@ -71,8 +64,9 @@ const dateFormat = (originalDate: string | number | Date) => {
   max-width: 800px
   width: 100%
   height: 100%
+  min-height: calc(100vh - 150px)
   margin: 60px auto
-  // padding: 0 20px
+  padding: 15px
 .main__container
   display: flex
   flex-direction: column

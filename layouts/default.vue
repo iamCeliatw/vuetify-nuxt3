@@ -2,7 +2,7 @@
 
 <template lang="pug">
 v-layout.rounded.rounded-md
-  v-app-bar
+  v-app-bar(color="admin-layout")
     v-app-bar-nav-icon(:icon="hamburger" @click.stop="drawer = !drawer")
     v-toolbar-title {{ "vuetify" }}
     v-spacer

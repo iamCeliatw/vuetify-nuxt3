@@ -1,15 +1,13 @@
 <template lang="pug">
 HomepageNavbar
 HomepageMainSection(:articles="articles" :pending="pending" :error="error")
+HomepageMessageBoard
 </template>
 
 <script setup lang="ts">
-import { indexStore } from '../store/index'
+// import { indexStore } from '../store/index'
 import type { Database } from '../types/supabase'
 const colorMode = useColorMode()
-
-// colorMode.preference = 'dark'
-//home page 放留言板 介紹 連結
 const supabase = useSupabaseClient()
 const articleList = ref<
   Database['public']['Tables']['articles']['Row'][] | null
@@ -22,7 +20,6 @@ const {
   refresh,
 } = useAsyncData('articlesData', async () => {
   const { data, error } = await supabase.from('articles').select()
-  console.log(articles.value)
 
   if (error) {
     console.error('Failed to fetch articles:', error.message)

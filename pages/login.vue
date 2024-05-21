@@ -42,8 +42,9 @@ const signInWithEmail = async () => {
   } 
 }
 onMounted(async () => {
-  const user = await supabase.auth.getUser()
-  if (user) router.push('/admin') 
+  const data = await supabase.auth.getSession()
+  console.log(data,"user");
+  if (data.data.session?.user) router.push('/admin') 
 })
 </script>
 
@@ -53,9 +54,9 @@ onMounted(async () => {
   height: 100%
   min-height: 100vh
   position: relative
-  // background: #83a4d4;  /* fallback for old browsers */
-  // background: -webkit-linear-gradient(to right, #b6fbff, #83a4d4)
-  // background: linear-gradient(to right, #b6fbff, #83a4d4) 
+  background: #83a4d4
+  background: -webkit-linear-gradient(to right, #b6fbff, #83a4d4)
+  background: linear-gradient(to right, #b6fbff, #83a4d4) 
 
 .login__container,
 .alert__container
@@ -70,7 +71,7 @@ onMounted(async () => {
   gap: 10px
   h3
     text-align: center
-    color: #696969
+    // color: #696969
   input
     padding: 5px 10px
     border: 1px solid #ffffffaa

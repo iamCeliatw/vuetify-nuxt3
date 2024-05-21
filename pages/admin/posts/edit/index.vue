@@ -10,10 +10,10 @@ ClientOnly
         v-text-field(type="date" label="Date" v-model="state.publish_date" :error-messages="v$.publish_date.$errors.map(e => e.$message)")
         v-autocomplete(v-model="selectedTags" multiple clearable chips label="tags" :items="tagsList" varient="solo" item-title="name" item-value="id")
         AdminEditor(@updateValue="handleContent" :content="state.content" v-model="state.content")
-        v-switch(v-model="state.status" :label='state.status ? "上架" : "下架" ' hide-details inset required)
+        v-switch(v-model="state.status" :label='state.status ? "上架" : "下架" ' hide-details inset required :color="state.status ? 'success' : 'error'")
         .my-4
         v-btn(class="me-4 px-2" @click="submitHandler") submit 
-        v-btn(class="px-2" @click="clear") clear
+        v-btn(class="px-2" @click="cancel") cancel
         .alert__popup(v-if="submitPopupOpen && formSuccess")
           v-alert(closable
             title="Info"
@@ -138,6 +138,7 @@ const submitHandler = async () => {
       }).select()
       formSuccess.value = !error;
       submitPopupOpen.value = true;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       if(data){
         // console.log(data[0].id,"返回文章資訊");
           selectedTags.value?.forEach(async (tag_id) => {
@@ -156,11 +157,8 @@ const submitHandler = async () => {
   }
 }
 
-const clear = () => {
-  v$.value.$reset()
-  for (const [key, value] of Object.entries(initialState)) {
-    (state as Record<string, typeof value>)[key] = value
-  }
+const cancel = () => {
+  router.push('/admin/posts')
 }
 const loading = ref(true)
 const imagesList = ref<Image[]>([])

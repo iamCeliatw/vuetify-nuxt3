@@ -61,7 +61,7 @@ const categoriesDataHandler = async () => {
   categoryList.value = await getData('categories')
 }
 const isEditing = ref(false)
-const editCategory = ref({
+const editCategory = ref<Database['public']['Tables']['categories']['Row']>({
   id: 0,
   name: '',
 })

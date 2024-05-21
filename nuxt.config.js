@@ -1,14 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
-  css: ['@/assets/main.sass'],
-  // runtimeConfig: {
-  //   public: {
-  //     serverUrl: process.env.NUXT_SUPABASE_URL,
-  //     clientUrl: process.env.NUXT_SUPABASE_KEY,
-  //   },
-  // },
-
+  css: ["@/assets/main.sass"],
   devtools: { enabled: true },
   build: {
     transpile: ['vuetify'],
@@ -45,17 +38,10 @@ export default defineNuxtConfig({
         transformAssetUrls,
       },
     },
-    // css: {
-    //   preprocessorOptions: {
-    //     sass: {
-    //       additionalData: `@import "@/assets/main.sass"`,
-    //     },
-    //   },
-    // },
   },
   app: {
     head: {
-      title: `Celia's blog`,
+      title: `Celia's Blog`,
     },
   },
   supabase: {
@@ -63,7 +49,7 @@ export default defineNuxtConfig({
       login: '/login',
       callback: '/admin',
       // include: ['/admin'],
-      exclude: ['/', '/admin(/*)?', '/article(/*)?'],
+      exclude: ['/','/admin(/*)?','/article(/*)?','/about','/category(/*)?'],
       cookieRedirect: false,
     },
   },

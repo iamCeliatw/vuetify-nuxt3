@@ -100,7 +100,7 @@ export type Database = {
         }
         Update: {
           id?: number
-          name?: string
+          name: string
         }
         Relationships: []
       }
