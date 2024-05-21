@@ -85,7 +85,7 @@ if (route.params.slug[0] == 'admin') {
     font-size: 35px
     &:hover
       text-decoration: underline
-    @include xxs-breakpoint
+    @include breakPoint(size-430 ,null)
       font-size: 15px
 .text
   display: flex
