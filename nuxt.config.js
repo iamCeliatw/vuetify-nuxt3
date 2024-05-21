@@ -14,18 +14,19 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    '@pinia/nuxt', '@nuxtjs/supabase',
+    '@pinia/nuxt',
+    '@nuxtjs/supabase',
     '@nuxtjs/color-mode',
     '@zadigetvoltaire/nuxt-gtm',
     'nuxt-gtag',
   ],
   gtag: {
-    id: 'G-D5BG0PXWCQ'
+    id: 'G-D5BG0PXWCQ',
   },
   gtm: {
     id: `GTM-KCZKSVHP`,
     enabled: true,
-    pageTracking: true
+    pageTracking: true,
   },
   colorMode: {
     preference: 'dark',
@@ -43,13 +44,13 @@ export default defineNuxtConfig({
       title: `Celia's Blog`,
     },
   },
-  supabase:{
+  supabase: {
     redirectOptions: {
       login: '/login',
       callback: '/admin',
       // include: ['/admin'],
       exclude: ['/','/admin(/*)?','/article(/*)?','/about','/category(/*)?'],
       cookieRedirect: false,
-    }
+    },
   },
 })

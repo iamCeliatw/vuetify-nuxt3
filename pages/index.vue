@@ -9,9 +9,16 @@ HomepageMessageBoard
 import type { Database } from '../types/supabase'
 const colorMode = useColorMode()
 const supabase = useSupabaseClient()
-const articleList = ref<Database['public']['Tables']['articles']['Row'][] | null>([])
+const articleList = ref<
+  Database['public']['Tables']['articles']['Row'][] | null
+>([])
 const router = useRouter()
-const { data: articles, pending, error, refresh } = useAsyncData('articlesData', async () => {
+const {
+  data: articles,
+  pending,
+  error,
+  refresh,
+} = useAsyncData('articlesData', async () => {
   const { data, error } = await supabase.from('articles').select()
 
   if (error) {
@@ -19,6 +26,15 @@ const { data: articles, pending, error, refresh } = useAsyncData('articlesData',
     throw error
   }
   return data
+})
+useHead({
+  title: `文章 - Celia's blog`,
+  meta: [
+    {
+      name: 'description',
+      content: 'This is the home page of the website.',
+    },
+  ],
 })
 </script>
 

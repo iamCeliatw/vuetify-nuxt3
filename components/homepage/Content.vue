@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 .content__wrapper 
   .content__container
     h1.article__title 
@@ -21,23 +21,32 @@
 
 </template>
 
-<script lang='ts' setup>
-import type { Database } from '~/types/supabase';
-import hljs from 'highlight.js';
-import 'highlight.js/styles/monokai-sublime.css'; 
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
+<script lang="ts" setup>
+import type { Database } from '~/types/supabase'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/monokai-sublime.css'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
 const props = defineProps<{
   articleData: Database['public']['Tables']['articles']['Row']
 }>()
 // console.log(props.articleData, 'articleData');
 const supabase = useSupabaseClient()
 
-const formatDate = (originalDate:string) => {
+const formatDate = (originalDate: string) => {
   const date = new Date(originalDate)
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
-const { data: tags, pending: tagPending, error: tagError, refresh: tagRefresh } = useAsyncData('tagsData', async () => {
+const {
+  data: tags,
+  pending: tagPending,
+  error: tagError,
+  refresh: tagRefresh,
+} = useAsyncData('tagsData', async () => {
   const { data, error } = await supabase.from('tags').select()
   if (error) {
     console.error('Failed to fetch tags:', error.message)
@@ -78,8 +87,8 @@ const { data: articleTagsList, pending, error, refresh } = useAsyncData<Database
     .select('tag_id')
     .eq('article_id', props.articleData.id)
     if (error) {
-    console.error('Failed to fetch article tag data:', error);
-    return;
+      console.error('Failed to fetch article tag data:', error)
+      return
     }
     // console.log(articleTagsList.value, props.articleData.id, 'articleTagsList');
     if(data){
@@ -99,7 +108,6 @@ onMounted(async() => {
     ).eq('id', props.articleData.id)
   }
 })
-
 </script>
 
 <style lang='sass' scoped>
@@ -108,7 +116,7 @@ onMounted(async() => {
   width: 100%
   height: 100%
 .content__container
-  width: 65% 
+  width: 65%
   margin: 0 auto
   @include breakPoint(size-768 ,null)
     width: 90%
