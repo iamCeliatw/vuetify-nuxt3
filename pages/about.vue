@@ -1,5 +1,6 @@
 <template lang="pug">
 HomepageNavbar
+HomepageBreadCrumb
 </template>
 
 <script setup lang="ts">

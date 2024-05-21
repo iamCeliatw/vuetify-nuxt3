@@ -2,7 +2,7 @@
 nav.navbar__wrapper 
   .navbar__container
     .navbar__title 
-      p Celia's note
+      //- p Celia's note
     .button__section 
       ul.navigate__section
         li(:class="{ 'active-route': router.currentRoute.value.path === nav.url }" v-for="nav in navigate" :key="nav", @click="() => router.push(nav.url)" ) {{ nav.name }}
@@ -27,7 +27,8 @@ const navigate = ref([
 @import "../../assets/breakpoint"
 
 .navbar__wrapper
-  width: 65%
+  width: auto
+  max-width: 800px
   height: 90px
   display: flex
   justify-content: center

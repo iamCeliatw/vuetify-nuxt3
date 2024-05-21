@@ -1,5 +1,6 @@
 <template lang="pug">
 HomepageNavbar
+HomepageBreadCrumb
 HomepageMainSection(:articles="articles" :pending="pending" :error="error")
 HomepageMessageBoard
 </template>

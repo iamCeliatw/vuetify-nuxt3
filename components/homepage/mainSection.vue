@@ -65,7 +65,7 @@ const dateFormat = (originalDate: string | number | Date) => {
   width: 100%
   height: 100%
   min-height: calc(100vh - 150px)
-  margin: 60px auto
+  margin: auto
   padding: 15px
 .main__container
   display: flex
