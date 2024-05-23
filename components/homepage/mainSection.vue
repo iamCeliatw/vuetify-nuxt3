@@ -1,6 +1,6 @@
 <template lang="pug">
 section.main__wrapper 
-  .main__container 
+  .main__container(v-if="!pending && !error")
     .article__container(v-for="article in articlesByYear" :key="article.id")
       h1.article__title {{ article.year }}
         .article__items--container
@@ -65,7 +65,7 @@ const dateFormat = (originalDate: string | number | Date) => {
   width: 100%
   height: 100%
   min-height: calc(100vh - 150px)
-  margin: 60px auto
+  margin: auto
   padding: 15px
 .main__container
   display: flex

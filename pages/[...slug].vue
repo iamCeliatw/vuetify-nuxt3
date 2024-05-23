@@ -76,7 +76,7 @@ if (route.params.slug[0] == 'admin') {
     font-size: 20vw
     color: #D7D5E4
   p
-  color: #9E9BB2
+    color: #9E9BB2
   img
     width: 100%
   a

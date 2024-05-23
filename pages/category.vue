@@ -1,6 +1,7 @@
 <template lang='pug'>
 .category__wrapper 
   HomepageNavbar
+  HomepageBreadCrumb
 
 </template>
 

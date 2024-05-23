@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/166</span>
+                <span class='fraction'>0/174</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/166</span>
+                <span class='fraction'>0/174</span>
             </div>
         
             
@@ -228,7 +228,16 @@
 <a name='L163'></a><a href='#L163'>163</a>
 <a name='L164'></a><a href='#L164'>164</a>
 <a name='L165'></a><a href='#L165'>165</a>
-<a name='L166'></a><a href='#L166'>166</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -393,7 +402,16 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >&lt;template lang='pug'&gt;<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >&lt;template lang="pug"&gt;<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 <span class="cstat-no" title="statement not covered" >.content__wrapper </span>
 <span class="cstat-no" title="statement not covered" >  .content__container</span>
 <span class="cstat-no" title="statement not covered" >    h1.article__title </span>
@@ -416,23 +434,32 @@
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >&lt;/template&gt;</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >&lt;script lang='ts' setup&gt;</span>
-<span class="cstat-no" title="statement not covered" >import type { Database } from '~/types/supabase';</span>
-<span class="cstat-no" title="statement not covered" >import hljs from 'highlight.js';</span>
-<span class="cstat-no" title="statement not covered" >import 'highlight.js/styles/monokai-sublime.css'; </span>
-<span class="cstat-no" title="statement not covered" >import '@vueup/vue-quill/dist/vue-quill.snow.css';</span>
+<span class="cstat-no" title="statement not covered" >&lt;script lang="ts" setup&gt;</span>
+<span class="cstat-no" title="statement not covered" >import type { Database } from '~/types/supabase'</span>
+<span class="cstat-no" title="statement not covered" >import hljs from 'highlight.js'</span>
+<span class="cstat-no" title="statement not covered" >import 'highlight.js/styles/monokai-sublime.css'</span>
+<span class="cstat-no" title="statement not covered" >import '@vueup/vue-quill/dist/vue-quill.snow.css'</span>
 <span class="cstat-no" title="statement not covered" >const props = defineProps&lt;{</span>
 <span class="cstat-no" title="statement not covered" >  articleData: Database['public']['Tables']['articles']['Row']</span>
 <span class="cstat-no" title="statement not covered" >}&gt;()</span>
 <span class="cstat-no" title="statement not covered" >// console.log(props.articleData, 'articleData');</span>
 <span class="cstat-no" title="statement not covered" >const supabase = useSupabaseClient()</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >const formatDate = (originalDate:string) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >const formatDate = (originalDate: string) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >  const date = new Date(originalDate)</span>
-<span class="cstat-no" title="statement not covered" >  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })</span>
+<span class="cstat-no" title="statement not covered" >  return date.toLocaleDateString('en-US', {</span>
+<span class="cstat-no" title="statement not covered" >    month: 'short',</span>
+<span class="cstat-no" title="statement not covered" >    day: 'numeric',</span>
+<span class="cstat-no" title="statement not covered" >    year: 'numeric',</span>
+<span class="cstat-no" title="statement not covered" >  })</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >const { data: tags, pending: tagPending, error: tagError, refresh: tagRefresh } = useAsyncData('tagsData', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >const {</span>
+<span class="cstat-no" title="statement not covered" >  data: tags,</span>
+<span class="cstat-no" title="statement not covered" >  pending: tagPending,</span>
+<span class="cstat-no" title="statement not covered" >  error: tagError,</span>
+<span class="cstat-no" title="statement not covered" >  refresh: tagRefresh,</span>
+<span class="cstat-no" title="statement not covered" >} = useAsyncData('tagsData', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >  const { data, error } = await supabase.from('tags').select()</span>
 <span class="cstat-no" title="statement not covered" >  if (error) {</span>
 <span class="cstat-no" title="statement not covered" >    console.error('Failed to fetch tags:', error.message)</span>
@@ -473,8 +500,8 @@
 <span class="cstat-no" title="statement not covered" >    .select('tag_id')</span>
 <span class="cstat-no" title="statement not covered" >    .eq('article_id', props.articleData.id)</span>
 <span class="cstat-no" title="statement not covered" >    if (error) {</span>
-<span class="cstat-no" title="statement not covered" >    console.error('Failed to fetch article tag data:', error);</span>
-<span class="cstat-no" title="statement not covered" >    return;</span>
+<span class="cstat-no" title="statement not covered" >      console.error('Failed to fetch article tag data:', error)</span>
+<span class="cstat-no" title="statement not covered" >      return</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >    // console.log(articleTagsList.value, props.articleData.id, 'articleTagsList');</span>
 <span class="cstat-no" title="statement not covered" >    if(data){</span>
@@ -494,7 +521,6 @@
 <span class="cstat-no" title="statement not covered" >    ).eq('id', props.articleData.id)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >})</span>
-<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >&lt;/script&gt;</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >&lt;style lang='sass' scoped&gt;</span>
@@ -503,7 +529,7 @@
 <span class="cstat-no" title="statement not covered" >  width: 100%</span>
 <span class="cstat-no" title="statement not covered" >  height: 100%</span>
 <span class="cstat-no" title="statement not covered" >.content__container</span>
-<span class="cstat-no" title="statement not covered" >  width: 65% </span>
+<span class="cstat-no" title="statement not covered" >  width: 65%</span>
 <span class="cstat-no" title="statement not covered" >  margin: 0 auto</span>
 <span class="cstat-no" title="statement not covered" >  @include breakPoint(size-768 ,null)</span>
 <span class="cstat-no" title="statement not covered" >    width: 90%</span>
@@ -558,14 +584,15 @@
 <span class="cstat-no" title="statement not covered" >  img</span>
 <span class="cstat-no" title="statement not covered" >    width: 20px</span>
 <span class="cstat-no" title="statement not covered" >    height: 20px</span>
-<span class="cstat-no" title="statement not covered" >&lt;/style&gt;</span></pre></td></tr></table></pre>
+<span class="cstat-no" title="statement not covered" >&lt;/style&gt;</span>
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-05-21T07:44:50.974Z
+                at 2024-05-22T09:56:10.682Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
