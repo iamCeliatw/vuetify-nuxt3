@@ -9,11 +9,13 @@ declare module 'vue' {
   export interface GlobalComponents {
     AdminAlertPopup: typeof import('./components/admin/AlertPopup.vue')['default']
     AdminEditor: typeof import('./components/admin/Editor.vue')['default']
+    HomepageBreadCrumb: typeof import('./components/homepage/BreadCrumb.vue')['default']
     HomepageContent: typeof import('./components/homepage/Content.vue')['default']
     HomepageLightModeButton: typeof import('./components/homepage/LightModeButton.vue')['default']
     HomepageMainSection: typeof import('./components/homepage/MainSection.vue')['default']
     HomepageMessageBoard: typeof import('./components/homepage/MessageBoard.vue')['default']
     HomepageNavbar: typeof import('./components/homepage/Navbar.vue')['default']
+    HomepageParticleEffect: typeof import('./components/homepage/ParticleEffect.vue')['default']
     HomepageSvgMoonIcon: typeof import('./components/homepage/svg/moonIcon.vue')['default']
     HomepageSvgSunIcon: typeof import('./components/homepage/svg/sunIcon.vue')['default']
     Mybutton: typeof import('./components/Mybutton.vue')['default']

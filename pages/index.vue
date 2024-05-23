@@ -3,6 +3,7 @@ HomepageNavbar
 HomepageBreadCrumb
 HomepageMainSection(:articles="articles" :pending="pending" :error="error")
 HomepageMessageBoard
+
 </template>
 
 <script setup lang="ts">

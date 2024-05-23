@@ -7,7 +7,7 @@ import { ref } from 'vue';
 const mockUseColorMode = () => {
   vi.stubGlobal('useColorMode', vi.fn(() => ({ value: 'dark' })));
 };
-
+vi.stubGlobal('useHead', vi.fn(() => ({ title: 'Home' })))
 const mockUseAsyncData = (data: any) => {
   vi.stubGlobal('useAsyncData', vi.fn(() => ({
     data: ref(data),
@@ -34,6 +34,11 @@ const mockUseRouter = () => {
   return { push, currentRoute };
 };
 
+// const mockUseRoute = () => {
+//   const params = vi.fn(() => ({ id: 1 }));
+//   vi.stubGlobal('useRoute', () => ({ params }));
+// }
+
 vi.mock('@nuxtjs/composition-api', () => ({
   useAsyncData: vi.fn(),
   useColorMode: vi.fn(() => ({ preference: 'light' })),
@@ -58,6 +63,7 @@ describe('HomePage', () => {
     mockUseAsyncData([]);
     mockUseSupabaseClient();
     mockUseRouter();
+    // mockUseRoute();
   });
 
   it('should render correctly', () => {
@@ -68,7 +74,10 @@ describe('HomePage', () => {
           template: '<div class="mock-main-section"></div>',
           props: ['articles', 'pending', 'error']
         },
-        HomepageMessageBoard: true
+        HomepageMessageBoard: true,
+        HomepageBreadCrumb:  {
+          template: '<div class="bread-crumb"></div>',
+        },
       }
     });
   });
@@ -85,7 +94,17 @@ describe('HomePage', () => {
       error: ref(null),
     });
 
-    const wrapper = mount(HomePage);
+    const wrapper = shallowMount(HomePage, {
+      stubs: {
+        HomepageNavbar: true,
+        HomepageMainSection: {
+          template: '<div class="mock-main-section"></div>',
+          props: ['articles', 'pending', 'error']
+        },
+        HomepageMessageBoard: true,
+        HomepageBreadCrumb: true,
+      }
+    });
     await wrapper.vm.$nextTick();
 
     const mainSection = wrapper.findComponent({ name: 'MainSection' });

@@ -8,7 +8,7 @@
 
 <script lang='ts' setup>
 import { ref, watch } from 'vue';
-import { useRoute, useRouter } from 'nuxt/app';
+// import { useRoute, useRouter } from 'nuxt/app';
 type BreadCrumb = {
   title:  {} | undefined;
   href: string;
@@ -16,39 +16,39 @@ type BreadCrumb = {
 }
 const route = useRoute();
 const router = useRouter();
+const reactiveRoute = reactive({
+  path: route.path,
+  matched: route.matched,
+  params: route.params
+});
 const items = ref<BreadCrumb[]>([]);
 
 const updateItems = () => {
-  let breadcrumbItems:BreadCrumb[] = [];
+  let breadcrumbItems: BreadCrumb[] = [];
 
-  if (route.path !== '/') {
-    breadcrumbItems = route.matched.map((match, index) => {
+  if (reactiveRoute.path !== '/') {
+    breadcrumbItems = reactiveRoute.matched.map((match, index) => {
       const title = match.meta.title || match.name;
-      const href = match.path.replace(/\/:([^/]+)/g, (_, key) => `/${route.params[key]}`);
+      const href = match.path.replace(/\/:([^/]+)/g, (_, key) => `/${reactiveRoute.params[key]}`);
       return {
         title,
-        disabled: index === route.matched.length - 1,
+        disabled: index === reactiveRoute.matched.length - 1,
         href,
       };
     });
   }
-
-  // 手动添加首页
   breadcrumbItems.unshift({
     title: 'Home',
     href: '/',
-    disabled: route.path === '/',
+    disabled: reactiveRoute.path === '/',
   });
 
   items.value = breadcrumbItems;
-  // console.log(breadcrumbItems, "bb");
 };
 
-// 初始调用一次
 updateItems();
 
-// 监听路由变化
-watch(route, () => {
+watch(reactiveRoute, () => {
   updateItems();
 });
 

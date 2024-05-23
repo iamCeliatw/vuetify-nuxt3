@@ -1,6 +1,6 @@
 <template lang="pug">
 section.main__wrapper 
-  .main__container 
+  .main__container(v-if="!pending && !error")
     .article__container(v-for="article in articlesByYear" :key="article.id")
       h1.article__title {{ article.year }}
         .article__items--container
