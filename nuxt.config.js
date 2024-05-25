@@ -19,7 +19,6 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@zadigetvoltaire/nuxt-gtm',
     'nuxt-gtag',
-    '@nuxtjs/sitemap',
   ],
   gtag: {
     id: 'G-D5BG0PXWCQ',
