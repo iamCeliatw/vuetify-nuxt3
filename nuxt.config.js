@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
-  css: ["@/assets/main.sass"],
+  css: ['@/assets/main.sass'],
   devtools: { enabled: true },
   build: {
     transpile: ['vuetify'],
@@ -19,6 +19,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@zadigetvoltaire/nuxt-gtm',
     'nuxt-gtag',
+    '@nuxtjs/sitemap',
   ],
   gtag: {
     id: 'G-D5BG0PXWCQ',
@@ -42,6 +43,12 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: `Celia's Blog`,
+      meta: [
+        {
+          name: 'google-site-verification',
+          content: 'RxsAX-B4Wx58KvSm9bLHxM7AwMSsw3SvJnwoSrcgg1I',
+        },
+      ],
     },
   },
   supabase: {
@@ -49,7 +56,13 @@ export default defineNuxtConfig({
       login: '/login',
       callback: '/admin',
       // include: ['/admin'],
-      exclude: ['/','/admin(/*)?','/article(/*)?','/about','/category(/*)?'],
+      exclude: [
+        '/',
+        '/admin(/*)?',
+        '/article(/*)?',
+        '/about',
+        '/category(/*)?',
+      ],
       cookieRedirect: false,
     },
   },
