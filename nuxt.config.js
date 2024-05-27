@@ -1,37 +1,37 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 export default defineNuxtConfig({
-  css: ['@/assets/main.sass'],
+  css: ["@/assets/main.sass"],
   devtools: { enabled: true },
   build: {
-    transpile: ['vuetify'],
+    transpile: ["vuetify"],
     analyze: true,
   },
   modules: [
     (_options, nuxt) => {
-      nuxt.hooks.hook('vite:extendConfig', (config) => {
+      nuxt.hooks.hook("vite:extendConfig", (config) => {
         // @ts-expect-error
-        config.plugins.push(vuetify({ autoImport: true }))
-      })
+        config.plugins.push(vuetify({ autoImport: true }));
+      });
     },
-    '@pinia/nuxt',
-    '@nuxtjs/supabase',
-    '@nuxtjs/color-mode',
-    '@zadigetvoltaire/nuxt-gtm',
-    'nuxt-gtag',
-    '@nuxtjs/sitemap',
+    "@pinia/nuxt",
+    "@nuxtjs/supabase",
+    "@nuxtjs/color-mode",
+    "@zadigetvoltaire/nuxt-gtm",
+    "nuxt-gtag",
+    "@nuxtjs/sitemap",
   ],
   sitemap: {
-    hostname: 'https://celia-blog.vercel.app/',
+    hostname: "https://celia-blog.vercel.app/",
     routes: async () => {
       // 返回應該包含在 Sitemap 中的路由列表
       // 這裡可以動態生成，例如從 API 獲取
-      const routes = ['/']
-      return routes
+      const routes = ["/"];
+      return routes;
     },
   },
   gtag: {
-    id: 'G-D5BG0PXWCQ',
+    id: "G-D5BG0PXWCQ",
   },
   gtm: {
     id: `GTM-KCZKSVHP`,
@@ -39,8 +39,8 @@ export default defineNuxtConfig({
     pageTracking: true,
   },
   colorMode: {
-    preference: 'dark',
-    fallback: 'dark',
+    preference: "dark",
+    fallback: "dark",
   },
   vite: {
     vue: {
@@ -54,25 +54,26 @@ export default defineNuxtConfig({
       title: `Celia's Blog`,
       meta: [
         {
-          name: 'google-site-verification',
-          content: 'RxsAX-B4Wx58KvSm9bLHxM7AwMSsw3SvJnwoSrcgg1I',
+          name: "google-site-verification",
+          content: "RxsAX-B4Wx58KvSm9bLHxM7AwMSsw3SvJnwoSrcgg1I",
         },
       ],
     },
   },
   supabase: {
     redirectOptions: {
-      login: '/login',
-      callback: '/admin',
+      login: "/login",
+      callback: "/admin",
       // include: ['/admin'],
       exclude: [
-        '/',
-        '/admin(/*)?',
-        '/article(/*)?',
-        '/about',
-        '/category(/*)?',
+        "/",
+        "/sitemap.xml",
+        "/admin(/*)?",
+        "/article(/*)?",
+        "/about",
+        "/category(/*)?",
       ],
       cookieRedirect: false,
     },
   },
-})
+});

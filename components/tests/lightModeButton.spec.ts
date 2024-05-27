@@ -1,30 +1,45 @@
 import { mount } from "@vue/test-utils";
 import LightModeButton from "../homepage/LightModeButton.vue";
-// vi.stubGlobal("definePageMeta", vi.fn());
-// vi.stubGlobal("useColorMode", vi.fn());
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
-describe('LightModeButton', () => {
-  let mockUseColorMode: any;
+// 模擬 useColorMode hook
+const mockUseColorMode = vi.fn(() => ({
+  value: "dark",
+  preference: "dark",
+}));
 
+// 模擬全局函數
+vi.stubGlobal("useColorMode", mockUseColorMode);
+
+describe("LightModeButton", () => {
   beforeEach(() => {
-    mockUseColorMode = vi.fn(() => ({
-      value: 'dark',
-    }));
-    vi.stubGlobal('useColorMode', mockUseColorMode);
+    mockUseColorMode.mockClear();
   });
 
-  it('renders correctly', () => {
-    const wrapper = mount(LightModeButton, {
-    });
+  it("renders correctly", () => {
+    const wrapper = mount(LightModeButton);
+    expect(wrapper.exists()).toBe(true);
     expect(mockUseColorMode).toHaveBeenCalled();
   });
 
-  it('changes mode on input change', async () => {
+  it("changes mode to light on input change when initial mode is dark", async () => {
     const wrapper = mount(LightModeButton);
-    const input = wrapper.find('input');
-    await input.trigger('change');
+    const input = wrapper.find("input");
+    await input.trigger("change");
     const colorModeInstance = mockUseColorMode.mock.results[0].value;
-    console.log(colorModeInstance,"colorModeInstance");
-    expect(colorModeInstance.preference).toBe('light');
+    expect(colorModeInstance.preference).toBe("light");
+  });
+
+  it("changes mode to dark on input change when initial mode is light", async () => {
+    mockUseColorMode.mockReturnValueOnce({
+      value: "light",
+      preference: "light",
+    });
+
+    const wrapper = mount(LightModeButton);
+    const input = wrapper.find("input");
+    await input.trigger("change");
+    const colorModeInstance = mockUseColorMode.mock.results[0].value;
+    expect(colorModeInstance.preference).toBe("dark");
   });
 });

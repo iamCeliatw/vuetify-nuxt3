@@ -6,55 +6,70 @@
       v-icon(icon="mdi-chevron-right")
 </template>
 
-<script lang='ts' setup>
-import { ref, watch } from 'vue';
+<script lang="ts" setup>
+import { ref, watch } from "vue";
 // import { useRoute, useRouter } from 'nuxt/app';
 type BreadCrumb = {
-  title:  {} | undefined;
+  title: {} | undefined;
   href: string;
   disabled: boolean;
-}
+};
 const route = useRoute();
 const router = useRouter();
 const reactiveRoute = reactive({
   path: route.path,
   matched: route.matched,
-  params: route.params
+  params: route.params,
 });
 const items = ref<BreadCrumb[]>([]);
 
 const updateItems = () => {
   let breadcrumbItems: BreadCrumb[] = [];
 
-  if (reactiveRoute.path !== '/') {
-    breadcrumbItems = reactiveRoute.matched.map((match, index) => {
-      const title = match.meta.title || match.name;
-      const href = match.path.replace(/\/:([^/]+)/g, (_, key) => `/${reactiveRoute.params[key]}`);
-      return {
-        title,
-        disabled: index === reactiveRoute.matched.length - 1,
-        href,
-      };
-    });
-  }
-  breadcrumbItems.unshift({
-    title: 'Home',
-    href: '/',
-    disabled: reactiveRoute.path === '/',
+  reactiveRoute.matched.forEach((route) => {
+    if (route.path) {
+      const segments = route.path.split("/").filter((segment) => segment);
+      segments.forEach((segment, index) => {
+        const href = `/${segments.slice(0, index + 1).join("/")}`;
+        breadcrumbItems.push({
+          title: segment,
+          href,
+          disabled: false,
+        });
+      });
+    }
   });
+
+  breadcrumbItems.unshift({
+    title: "Home",
+    href: "/",
+    disabled: false,
+  });
+  console.log(breadcrumbItems);
+  // 設置最後一個面包屑項目的 `disabled` 為 `true`
+  if (breadcrumbItems.length > 1) {
+    breadcrumbItems[breadcrumbItems.length - 1].disabled = true;
+  }
 
   items.value = breadcrumbItems;
 };
 
 updateItems();
 
-watch(reactiveRoute, () => {
-  updateItems();
-});
-
+watch(
+  () => route.path,
+  () => {
+    reactiveRoute.path = route.path;
+    reactiveRoute.matched = route.matched;
+    reactiveRoute.params = route.params;
+    updateItems();
+    console.log("change route", reactiveRoute);
+  },
+  { immediate: true, deep: true }
+);
 </script>
 
-<style lang='sass' scoped>
+<style lang="sass" scoped>
 .breadCrumb__wrapper
   width: auto
   max-width: 800px

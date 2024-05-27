@@ -10,20 +10,20 @@
           HomepageSvgSunIcon
 </template>
 
-<script lang='ts' setup>
-const colorMode = useColorMode()
+<script lang="ts" setup>
+const colorMode = useColorMode();
 const changeMode = () => {
-  console.log(colorMode)
-  colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
-}
-</script> 
+  console.log(colorMode);
+  colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
+};
+</script>
 
-<style lang='sass' scoped>
+<style lang="sass" scoped>
 @import "@/assets/mixin.sass"
 $scale:55px
 $time: 1s
 .container
-  display: flex 
+  display: flex
   flex-direction: column
   width: 80%
   @media (min-width:500px)
@@ -38,19 +38,18 @@ input[type="checkbox"]
   position: relative
   border-radius: calc($scale/4)
   cursor: pointer
-  
-  
+
+
 .ball
   @include common(null,null,null,null,calc($scale/2),calc($scale/2),grey)
   position: absolute
   border-radius: 50%
   border: 3px solid black
-  
-  
+
+
 .scenary
   @include common(flex, row, space-between,null,null,null,null)
   padding: 2px 10px 0px 10px
   svg
     width: calc($scale / 3)
-
 </style>
