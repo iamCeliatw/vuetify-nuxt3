@@ -10,7 +10,7 @@ export default defineConfig({
       imports: ["vue"],
     }),
     Components({
-      dirs: ['./components'], // 調整為你的組件目錄
+      dirs: ["./components"], // 調整為你的組件目錄
       directoryAsNamespace: true, // 將目錄名稱作為命名空間
     }),
   ],
@@ -19,6 +19,7 @@ export default defineConfig({
     environment: "jsdom",
     coverage: {
       provider: "v8",
-    }
+      reporter: ["text", "lcov"],
+    },
   },
 });

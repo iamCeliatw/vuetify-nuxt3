@@ -22,30 +22,30 @@ section.login__wrapper
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-const router = useRouter()
-const supabase = useSupabaseClient()
-const email = ref('')
-const password = ref('')
-const showError = ref(false)
-const errorMessage = ref<string | undefined>('')
+import { ref } from "vue";
+const router = useRouter();
+const supabase = useSupabaseClient();
+const email = ref("");
+const password = ref("");
+const showError = ref(false);
+const errorMessage = ref<string | undefined>("");
 const signInWithEmail = async () => {
   const { data, error } = await supabase.auth.signInWithPassword({
-  email: email.value,
-  password: password.value,
-})
-  if (data?.user) router.push('/admin');
-  if (error){
-    console.log(error)
-    showError.value = true
-    errorMessage.value = error.message
-  } 
-}
+    email: email.value,
+    password: password.value,
+  });
+  if (data?.user) router.push("/admin");
+  if (error) {
+    console.log(error);
+    showError.value = true;
+    errorMessage.value = error.message;
+  }
+};
 onMounted(async () => {
-  const data = await supabase.auth.getSession()
-  console.log(data,"user");
-  if (data.data.session?.user) router.push('/admin') 
-})
+  const data = await supabase.auth.getSession();
+  console.log(data, "user");
+  if (data.data.session?.user) router.push("/admin");
+});
 </script>
 
 <style lang="sass" scoped>
@@ -55,8 +55,8 @@ onMounted(async () => {
   min-height: 100vh
   position: relative
   background: #83a4d4
-  background: -webkit-linear-gradient(to right, #b6fbff, #83a4d4)
-  background: linear-gradient(to right, #b6fbff, #83a4d4) 
+  background: -webkit-linear-gradient(right, #b6fbff, #83a4d4)
+  background: linear-gradient(to right, #b6fbff, #83a4d4)
 
 .login__container,
 .alert__container
