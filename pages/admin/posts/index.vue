@@ -87,12 +87,10 @@ const selectedItem = ref<Database["public"]["Tables"]["articles"]["Row"]>();
 const openDeleteDialog = (
   item: Database["public"]["Tables"]["articles"]["Row"]
 ) => {
-  // 新增這個函數
   selectedItem.value = item;
   deleteDialog.value = true;
 };
 const deleteArticle = async () => {
-  console.log(selectedItem.value);
   if (selectedItem.value && articleList.value) {
     const filter: FilterCondition<"articles">[] = [
       { column: "id", operator: "eq", value: selectedItem.value.id },

@@ -13,7 +13,8 @@
         ClientOnly
           p.content(v-html="articleData.content")
       .article__content--info 
-        .article__outline 大綱
+        .article__outline
+          p.outline__title 大綱
           p(v-for="h2 in h2Array") {{ h2 }}
         ClientOnly
           .article__tags
@@ -183,4 +184,8 @@ onMounted(async () => {
   img
     width: 20px
     height: 20px
+
+.outline__title
+  font-size: 24px
+  font-weight: 700
 </style>

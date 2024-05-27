@@ -2,13 +2,11 @@ import { mount } from "@vue/test-utils";
 import LightModeButton from "../homepage/LightModeButton.vue";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// 模擬 useColorMode hook
 const mockUseColorMode = vi.fn(() => ({
   value: "dark",
   preference: "dark",
 }));
 
-// 模擬全局函數
 vi.stubGlobal("useColorMode", mockUseColorMode);
 
 describe("LightModeButton", () => {

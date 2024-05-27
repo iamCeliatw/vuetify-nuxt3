@@ -13,14 +13,13 @@ nav.navbar__wrapper
 </template>
 
 <script lang="ts" setup>
-const colorMode = useColorMode()
-const router = useRouter()
+const colorMode = useColorMode();
+const router = useRouter();
 const navigate = ref([
-{ name: 'post', url: '/' },
-{ name: 'about', url: '/about' },
-{ name: 'category', url:'/category'}
-])
-
+  { name: "post", url: "/" },
+  { name: "about", url: "/about" },
+  { name: "category", url: "/category" },
+]);
 </script>
 
 <style lang="sass" scoped>
@@ -58,7 +57,7 @@ const navigate = ref([
     line-height: 40px
     transition: all .2s
     &:hover
-      border-bottom: 2px solid 
+      border-bottom: 2px solid
     @include breakPoint(size-768 ,null)
       font-size: 16px
 .button__section
@@ -76,17 +75,16 @@ const navigate = ref([
     width: 100%
     height: 100%
     object-fit: cover
-.active-route 
+.active-route
   border-bottom: 2px solid
-.navbar__title 
+.navbar__title
   p
     font-size: 26px
     @include breakPoint(size-768 ,null)
       font-size: 20px
     @include breakPoint(size-512 ,null)
       display: none
-    // font-weight: 
-    // color: var(--text-color
+
 .light__button
   width: auto
 </style>

@@ -12,7 +12,7 @@ declare module 'vue' {
     HomepageBreadCrumb: typeof import('./components/homepage/BreadCrumb.vue')['default']
     HomepageContent: typeof import('./components/homepage/Content.vue')['default']
     HomepageLightModeButton: typeof import('./components/homepage/LightModeButton.vue')['default']
-    HomepageMainSection: typeof import('./components/homepage/MainSection.vue')['default']
+    HomepageMainSection: typeof import('./components/homepage/mainSection.vue')['default']
     HomepageMessageBoard: typeof import('./components/homepage/MessageBoard.vue')['default']
     HomepageNavbar: typeof import('./components/homepage/Navbar.vue')['default']
     HomepageParticleEffect: typeof import('./components/homepage/ParticleEffect.vue')['default']

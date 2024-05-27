@@ -1,7 +1,6 @@
 <template lang="pug">
 ClientOnly
   NuxtLayout
-    HomepageBreadCrumb
     .form-wrapper.w-75.py-12.ma-auto
       form
         v-text-field(v-model="state.title" :counter="10" :error-messages="v$.title.$errors.map(e => e.$message)" label="Title" required @blur="v$.title.$touch" @input="v$.title.$touch")
@@ -128,10 +127,6 @@ const categoryDataHandler = async () => {
   }
 };
 const articleDataHandler = async () => {
-  // const { data, error } = await supabase
-  //   .from('articles')
-  //   .select()
-  //   .eq('id', route.params.id)
   const filter: FilterCondition<"articles">[] = [
     { column: "id", operator: "eq", value: route.params.id },
   ];
@@ -270,12 +265,6 @@ const submitHandler = async () => {
       formSuccess.value = !error;
       submitPopupOpen.value = true;
       window.scrollTo({ top: 0, behavior: "smooth" });
-      console.log(
-        formSuccess.value,
-        "formSuccess",
-        submitPopupOpen.value,
-        "submitPopupOpen"
-      );
     } catch (e) {
       console.log(e);
     }

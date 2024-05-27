@@ -8,7 +8,6 @@
 
 <script lang="ts" setup>
 import { ref, watch } from "vue";
-// import { useRoute, useRouter } from 'nuxt/app';
 type BreadCrumb = {
   title: {} | undefined;
   href: string;
@@ -45,8 +44,6 @@ const updateItems = () => {
     href: "/",
     disabled: false,
   });
-  console.log(breadcrumbItems);
-  // 設置最後一個面包屑項目的 `disabled` 為 `true`
   if (breadcrumbItems.length > 1) {
     breadcrumbItems[breadcrumbItems.length - 1].disabled = true;
   }
@@ -63,7 +60,6 @@ watch(
     reactiveRoute.matched = route.matched;
     reactiveRoute.params = route.params;
     updateItems();
-    console.log("change route", reactiveRoute);
   },
   { immediate: true, deep: true }
 );

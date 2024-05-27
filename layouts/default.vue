@@ -1,5 +1,3 @@
-
-
 <template lang="pug">
 v-layout.rounded.rounded-md
   v-app-bar(color="admin-layout")
@@ -15,8 +13,6 @@ v-layout.rounded.rounded-md
     v-list-item.list-item.my-2(@click="() => router.push('/admin/category')" title="category")
     v-list-item.list-item.my-2(@click="() => router.push('/admin/images')" title="images")
     v-list-item.list-item.my-2(@click="() => router.push('/admin/tags')" title="tags")
-    //- v-list-item.list-item(@click="() => router.push('/admin/posts')" title="account")
-    //- v-list-item.list-item(@click="() => router.push('/admin')" title="setting")
   v-main
     slot
 </template>
@@ -26,26 +22,19 @@ const router = useRouter();
 const supabase = useSupabaseClient();
 const signOut = async () => {
   await supabase.auth.signOut();
-  router.push('/login');
-}
-const hamburger = ref('mdi-hamburger');
-onMounted(async() => {
-  const user =  await supabase.auth.getUser();
-})
+  router.push("/login");
+};
+const hamburger = ref("mdi-hamburger");
+onMounted(async () => {
+  const user = await supabase.auth.getUser();
+});
 
 watchEffect(() => {
-  // if(drawer.value) {
-    hamburger.value = drawer.value ? 'mdi-hamburger-minus' : 'mdi-hamburger';
-  // } else {
-    // hamburger.value = 'mdi-hamburger';
-  // }
-})
+  hamburger.value = drawer.value ? "mdi-hamburger-minus" : "mdi-hamburger";
+});
 </script>
 <style scoped lang="sass">
 img
   width: 25px
   height: 25px
-.list-item
-  // margin: 8px 20px
-
 </style>
