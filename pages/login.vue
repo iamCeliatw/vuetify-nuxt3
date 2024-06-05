@@ -29,6 +29,7 @@ const email = ref("");
 const password = ref("");
 const showError = ref(false);
 const errorMessage = ref<string | undefined>("");
+// @ts-ignore
 const signInWithEmail = async () => {
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email.value,

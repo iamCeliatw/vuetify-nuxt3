@@ -6,13 +6,7 @@ HomepageMessageBoard
 </template>
 
 <script setup lang="ts">
-import type { Database } from "../types/supabase";
-const colorMode = useColorMode();
 const supabase = useSupabaseClient();
-const articleList = ref<
-  Database["public"]["Tables"]["articles"]["Row"][] | null
->([]);
-const router = useRouter();
 const {
   data: articles,
   pending,
@@ -20,7 +14,6 @@ const {
   refresh,
 } = useAsyncData("articlesData", async () => {
   const { data, error } = await supabase.from("articles").select();
-  console.log("我的文章", data);
   if (error) {
     console.error("Failed to fetch articles:", error.message);
     throw error;

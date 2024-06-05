@@ -13,7 +13,6 @@ nav.navbar__wrapper
 </template>
 
 <script lang="ts" setup>
-const colorMode = useColorMode();
 const router = useRouter();
 const navigate = ref([
   { name: "post", url: "/" },

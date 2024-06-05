@@ -27,6 +27,7 @@ type Image = {
 };
 const loading = ref(true);
 const imagesList = ref<Image[]>([]);
+// @ts-ignore
 const headers = ref([
   { text: "image", value: "image", title: "Image", sortable: false },
   { text: "actions", value: "actions", sortable: false },
@@ -51,14 +52,14 @@ const imageHandler = async () => {
     loading.value = false;
   }
 };
-const selectedFile = ref<File | null>(null);
-
+// const selectedFile = ref<File | null>(null);
+// @ts-ignore
 const uploadFile = async (event: Event): Promise<void> => {
   const input = event.target as HTMLInputElement;
   if (!input.files?.length) return;
 
   const file = input.files[0];
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from(STORAGE_BUCKET)
     .upload(`${file.name}`, file, {
       cacheControl: "3600",
@@ -74,9 +75,9 @@ const uploadFile = async (event: Event): Promise<void> => {
 onBeforeMount(async () => {
   await imageHandler();
 });
-
+// @ts-ignore
 const deleteItem = async (item: Image) => {
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from(STORAGE_BUCKET)
     .remove([item.name]);
   if (error) {

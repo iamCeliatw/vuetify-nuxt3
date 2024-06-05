@@ -38,7 +38,6 @@ ClientOnly
 import { reactive } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
-import type { VAlert } from "vuetify/components";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import { indexStore } from "../../../../store/index";
 import type { Database } from "../../../../types/supabase";
@@ -69,18 +68,17 @@ const initialState = {
 const formSuccess = ref(false);
 const submitPopupOpen = ref(false);
 
-const openCalender = ref(false);
 const tagsList = ref<Database["public"]["Tables"]["tags"]["Row"][] | null>([]);
 const categoriesList = ref<
   Database["public"]["Tables"]["categories"]["Row"][] | null
 >([]);
 const selectedTags = ref<number[] | null>([]);
 const oldSelectedTags = ref<number[]>([]);
-const articleId = ref(route.params.id);
+// const articleId = ref(route.params.id);
 const state = reactive({
   ...initialState,
 });
-
+// @ts-ignore
 const addImage = (image: Image) => {
   store.selectedImage = image;
   store.openImagePopup = false;
@@ -95,10 +93,7 @@ watch(
     }
   }
 );
-const onDateSelected = (date: string) => {
-  const timestamp = new Date(date).getTime();
-  openCalender.value = false;
-};
+
 //監聽編輯器文字
 const handleContent = (content: string) => {
   if (!content === undefined) {
@@ -241,7 +236,7 @@ onBeforeMount(async () => {
 });
 
 const v$ = useVuelidate(rules, state);
-
+// @ts-ignore
 const submitHandler = async () => {
   await v$.value.$validate();
   if (!v$.value.$error) {
@@ -271,13 +266,7 @@ const submitHandler = async () => {
   }
 };
 
-const clear = () => {
-  v$.value.$reset();
-  for (const [key, value] of Object.entries(initialState)) {
-    (state as Record<string, typeof value>)[key] = value;
-  }
-};
-
+// @ts-ignore
 const cancel = () => {
   router.push("/admin/posts");
 };

@@ -45,84 +45,85 @@ import { useFetchApi } from "../../../composables/supabase-api";
 definePageMeta({
   colorMode: "light",
 });
+
+type ErrorMessage = {
+  text: string;
+  title: string;
+  visable: boolean;
+};
+
 const supabase = useSupabaseClient();
-const router = useRouter();
-const search = ref("");
+const { getData, deleteData } = useFetchApi();
+const dialog = ref(false);
+const loading = ref(false);
+const isEditing = ref(false);
+const categoriesTable = supabase.from("categories");
+
+// @ts-ignore
 const headers = ref([
   { text: "name", value: "name", title: "name" },
   { text: "actions", value: "actions", sortable: false },
 ]);
-const { getData, deleteData } = useFetchApi();
 
 const categoryList = ref<
   Database["public"]["Tables"]["categories"]["Row"][] | null
 >([]);
 
 const categoriesDataHandler = async () => {
-  categoryList.value = await getData("categories");
-};
-const isEditing = ref(false);
-const editCategory = ref<Database["public"]["Tables"]["categories"]["Row"]>({
-  id: 0,
-  name: "",
-});
-const dialog = ref(false);
-const loading = ref(false);
-const categoryHandler = async () => {
   loading.value = true;
   categoryList.value = await getData("categories");
   loading.value = false;
 };
-type ErrorMessage = {
-  text: string;
-  title: string;
-  visable: boolean;
-};
+
+const editCategory = ref<Database["public"]["Tables"]["categories"]["Row"]>({
+  id: 0,
+  name: "",
+});
+
 const errorMessage = ref<ErrorMessage>({
   text: "",
   title: "",
   visable: false,
 });
+
+const handleDatabaseError = (error: any) => {
+  if (error?.code === "23505") {
+    errorMessage.value = {
+      text: "category name already exists",
+      title: "failed!",
+      visable: true,
+    };
+    console.log(errorMessage.value, "errorMessage");
+    return true;
+  }
+  return false;
+};
+
+// @ts-ignore
 const addItem = async (
   item?: Database["public"]["Tables"]["categories"]["Row"]
 ) => {
-  if (isEditing.value && item) {
-    try {
-      const { error } = await supabase
-        .from("categories")
+  try {
+    let error;
+    if (isEditing.value && item) {
+      ({ error } = await categoriesTable
         .update({
           name: editCategory.value.name,
         })
-        .eq("id", editCategory.value.id);
-      if (error?.code === "23505") {
-        errorMessage.value = {
-          text: "category name already exists",
-          title: "failed!",
-          visable: true,
-        };
-        return;
-      }
-    } catch (e) {
-      console.log("error:", e);
-    }
-  } else {
-    try {
-      const { error } = await supabase.from("categories").insert({
+        .eq("id", editCategory.value.id));
+    } else {
+      ({ error } = await categoriesTable.insert({
         name: editCategory.value.name,
-      });
-      if (error?.code === "23505") {
-        errorMessage.value = {
-          text: "category name already exists",
-          title: "failed!",
-          visable: true,
-        };
-        console.log(errorMessage.value, "errorMessage");
-        return;
-      }
-    } catch (e) {
-      console.log("error:", e);
+      }));
     }
+
+    if (handleDatabaseError(error)) {
+      return;
+    }
+  } catch (e) {
+    console.log("error:", e);
   }
+
   await categoriesDataHandler();
   dialog.value = false;
   isEditing.value = false;
@@ -132,6 +133,7 @@ const addItem = async (
   };
 };
 
+// @ts-ignore
 const openEditPopup = (
   item: Database["public"]["Tables"]["categories"]["Row"]
 ) => {
@@ -139,13 +141,12 @@ const openEditPopup = (
   isEditing.value = true;
   dialog.value = true;
 };
-
+// @ts-ignore
 const deleteItem = async (
   item: Database["public"]["Tables"]["categories"]["Row"]
 ) => {
   try {
-    //先找出article_tag內 是否有tag_id
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("articles")
       .select("category_id")
       .eq("category_id", item.id);

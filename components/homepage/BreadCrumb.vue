@@ -14,7 +14,6 @@ type BreadCrumb = {
   disabled: boolean;
 };
 const route = useRoute();
-const router = useRouter();
 const reactiveRoute = reactive({
   path: route.path,
   matched: route.matched,

@@ -155,9 +155,7 @@ const submitHandler = async () => {
           });
         });
       }
-    } catch (e) {
-      // console.log(e);
-    }
+    } catch (e) {}
   } else {
     console.log(`error:${v$.value.$error}`);
   }

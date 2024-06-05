@@ -7,7 +7,6 @@ export interface FilterCondition<T extends keyof Database["public"]["Tables"]> {
 }
 
 export function useFetchApi() {
-  const nuxtApp = useNuxtApp();
   const supabase = useSupabaseClient<Database>();
 
   async function getData<T extends keyof Database["public"]["Tables"]>(

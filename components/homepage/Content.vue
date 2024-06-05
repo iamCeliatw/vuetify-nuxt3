@@ -19,11 +19,11 @@
         ClientOnly
           .article__tags
             span.tag(v-for="tag in articletagList" :key="tag.id") {{ tag.name }}
-
 </template>
 
 <script lang="ts" setup>
 import type { Database } from "~/types/supabase";
+import { useFetchApi } from "../../composables/supabase-api";
 import hljs from "highlight.js";
 import "highlight.js/styles/monokai-sublime.css";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
@@ -31,7 +31,9 @@ const props = defineProps<{
   articleData: Database["public"]["Tables"]["articles"]["Row"];
 }>();
 const supabase = useSupabaseClient();
+const { getData } = useFetchApi();
 
+// @ts-ignore
 const formatDate = (originalDate: string) => {
   const date = new Date(originalDate);
   return date.toLocaleDateString("en-US", {
@@ -41,13 +43,11 @@ const formatDate = (originalDate: string) => {
   });
 };
 
-const {
-  data: tags,
-  pending: tagPending,
-  error: tagError,
-  refresh: tagRefresh,
-} = useAsyncData("tagsData", async () => {
-  const { data, error } = await supabase.from("tags").select();
+useAsyncData("tagsData", async () => {
+  const { data, error } = (await getData("tags")) as unknown as {
+    data: Database["public"]["Tables"]["tags"]["Row"][] | null;
+    error: Error | null;
+  };
   if (error) {
     console.error("Failed to fetch tags:", error.message);
     throw error;
@@ -73,12 +73,22 @@ const getContentOutline = (content: string | null) => {
     h2Contents.push(h2.textContent);
   });
   return h2Contents;
-};
+}; // @ts-ignore
 const h2Array = computed(() => getContentOutline(props.articleData.content));
-const allTags = ref<Database["public"]["Tables"]["tags"]["Row"][] | null>([]);
+// const route = useRoute();
+// @ts-ignore
 const articletagList = ref<
   Database["public"]["Tables"]["tags"]["Row"][] | null
 >([]);
+// @ts-ignore
+const filter: FilterCondition<"article_tag">[] = [
+  {
+    column: "article_id",
+    operator: "eq",
+    compareTable: "tag_id",
+    value: props.articleData.id,
+  },
+];
 
 // @ts-ignore
 const {

@@ -48,6 +48,9 @@ export default defineNuxtConfig({
         transformAssetUrls,
       },
     },
+    esbuild: {
+      drop: process.env.VITE_DEBUG_MODE ? [] : ["console", "debugger"],
+    },
   },
   app: {
     head: {
