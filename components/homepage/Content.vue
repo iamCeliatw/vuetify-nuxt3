@@ -85,7 +85,6 @@ const filter: FilterCondition<"article_tag">[] = [
   {
     column: "article_id",
     operator: "eq",
-    compareTable: "tag_id",
     value: props.articleData.id,
   },
 ];

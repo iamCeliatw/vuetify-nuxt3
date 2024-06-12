@@ -9,9 +9,9 @@ section.article__wrapper
 import type { Database } from "~/types/supabase";
 
 const supabase = useSupabaseClient();
-const articleList = ref<
-  Database["public"]["Tables"]["articles"]["Row"][] | null
->([]);
+// const articleList = ref<
+//   Database["public"]["Tables"]["articles"]["Row"][] | null
+// >([]);
 const route = useRoute();
 const fetchArticles = async (key: string[] | string) => {
   const { data, error } = await supabase
@@ -26,18 +26,11 @@ const fetchArticles = async (key: string[] | string) => {
 };
 
 const key = ref(route.params.key);
-const {
-  data: articles,
-  pending,
-  error,
-  refresh,
-} = useAsyncData<Database["public"]["Tables"]["articles"]["Row"][]>(
-  "articlesData",
-  () => fetchArticles(route.params.key),
-  {
-    watch: [key],
-  }
-);
+const { data: articles } = useAsyncData<
+  Database["public"]["Tables"]["articles"]["Row"][]
+>("articlesData", () => fetchArticles(route.params.key), {
+  watch: [key],
+});
 
 useHead({
   title: articles.value ? articles.value[0].title : "",

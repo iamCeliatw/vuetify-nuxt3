@@ -2,10 +2,10 @@
 nav.navbar__wrapper 
   .navbar__container
     .navbar__title 
-      //- p Celia's note
+      p Celia's note
     .button__section 
       ul.navigate__section
-        li(:class="{ 'active-route': router.currentRoute.value.path === nav.url }" v-for="nav in navigate" :key="nav", @click="() => router.push(nav.url)" ) {{ nav.name }}
+        li(:class="{ 'active-route': router.currentRoute.value.path === nav.url }" v-for="nav in navigate" :key="nav", @click="handleClick(nav)" ) {{ nav.name }}
       //- .github__icon 
       //-   img(src="/github.png")
       .light__button
@@ -13,12 +13,22 @@ nav.navbar__wrapper
 </template>
 
 <script lang="ts" setup>
+type Nav = {
+  name: string;
+  url: string;
+};
+//@ts-ignore
 const router = useRouter();
-const navigate = ref([
+//@ts-ignore
+const navigate = ref<Nav>([
   { name: "post", url: "/" },
   { name: "about", url: "/about" },
   { name: "category", url: "/category" },
 ]);
+//@ts-ignore
+const handleClick = (nav: Nav) => {
+  window.location.href = nav.url;
+};
 </script>
 
 <style lang="sass" scoped>

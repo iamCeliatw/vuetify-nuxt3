@@ -2,6 +2,7 @@
 .category__wrapper 
   HomepageNavbar
   HomepageBreadCrumb
+  HomepageCategorySection
 </template>
 
 <script lang="ts" setup></script>

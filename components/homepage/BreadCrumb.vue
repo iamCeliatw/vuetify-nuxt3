@@ -23,21 +23,35 @@ const items = ref<BreadCrumb[]>([]);
 
 const updateItems = () => {
   let breadcrumbItems: BreadCrumb[] = [];
-
-  reactiveRoute.matched.forEach((route) => {
-    if (route.path) {
-      const segments = route.path.split("/").filter((segment) => segment);
+  reactiveRoute.matched.forEach((routeRecord) => {
+    if (routeRecord.path) {
+      const segments = routeRecord.path.split("/").filter((segment) => segment);
       segments.forEach((segment, index) => {
-        const href = `/${segments.slice(0, index + 1).join("/")}`;
+        let segmentTitle: string | string[] = segment;
+        // Replace dynamic segment (e.g., :id) with actual value from params
+        if (segment.startsWith(":")) {
+          // :id() => id
+          const paramKey = segment.replace(/[:()]/g, "");
+          if (reactiveRoute.params[paramKey]) {
+            segmentTitle = reactiveRoute.params[paramKey];
+          }
+        }
+        const href = `/${segments
+          .slice(0, index + 1)
+          .map((seg) =>
+            seg.startsWith(":")
+              ? reactiveRoute.params[seg.substring(1)] || seg
+              : seg
+          )
+          .join("/")}`;
         breadcrumbItems.push({
-          title: segment,
+          title: segmentTitle,
           href,
           disabled: false,
         });
       });
     }
   });
-
   breadcrumbItems.unshift({
     title: "Home",
     href: "/",
