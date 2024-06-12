@@ -1,6 +1,5 @@
-import { mount, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import Navbar from "../homepage/Navbar.vue";
-import LightModeButton from "../homepage/LightModeButton.vue";
 vi.stubGlobal("useColorMode", vi.fn());
 vi.stubGlobal(
   "useRouter",

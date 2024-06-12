@@ -16,11 +16,13 @@ section.github__messageboard
       loading="lazy")
 </template>
 <script setup lang="ts">
-import Giscus from '@giscus/vue'
+// @ts-ignore
+import Giscus from "@giscus/vue";
 //出處：
 //https://giscus.app/zh-TW
-const colorMode = useColorMode()
-const theme = computed(() => `${colorMode.value}_protanopia`)
+const colorMode = useColorMode();
+// @ts-ignore
+const theme = computed(() => `${colorMode.value}_protanopia`);
 </script>
 
 <style lang="sass" scoped>

@@ -1,52 +1,53 @@
-<template lang='pug'>
+<template lang="pug">
 HomepageNavbar
 section.article__wrapper
   .article__container 
     HomepageContent(:articleData="articles[0]", v-if="articles")
-
 </template>
 
-<script lang='ts' setup>
-import { indexStore } from "../../store/index";
-import type { Database } from '~/types/supabase';
-// definePageMeta({
-//   colorMode: 'dark',
-// })
+<script lang="ts" setup>
+import type { Database } from "~/types/supabase";
 
-
-
-//home page 放留言板 介紹 連結
-const supabase = useSupabaseClient()
-const articleList = ref<Database['public']['Tables']['articles']['Row'][] | null>([])
-const route = useRoute()
-console.log(route.params.key, 'route');
-const fetchArticles = async (key:string[] | string) => {
-  const { data, error } = await supabase.from('articles').select().eq('key', key);
-  console.log(data,"data~");
+const supabase = useSupabaseClient();
+// const articleList = ref<
+//   Database["public"]["Tables"]["articles"]["Row"][] | null
+// >([]);
+const route = useRoute();
+const fetchArticles = async (key: string[] | string) => {
+  const { data, error } = await supabase
+    .from("articles")
+    .select()
+    .eq("key", key);
   if (error) {
-    console.error('Failed to fetch articles:', error.message);
-    throw new Error('Failed to fetch articles');
+    console.error("Failed to fetch articles:", error.message);
+    throw new Error("Failed to fetch articles");
   }
   return data;
 };
 
+const key = ref(route.params.key);
+const { data: articles } = useAsyncData<
+  Database["public"]["Tables"]["articles"]["Row"][]
+>("articlesData", () => fetchArticles(route.params.key), {
+  watch: [key],
+});
 
-
-const key = ref(route.params.key)
-const { data: articles, pending, error, refresh } = useAsyncData<Database['public']['Tables']['articles']['Row'][]>('articlesData', () => fetchArticles(route.params.key), {
-  watch: [key]  
- });
-console.log(articles.value, 'articles');
 useHead({
-  title: articles.value ? articles.value[0].title : '',
+  title: articles.value ? articles.value[0].title : "",
   meta: [
-    { property: 'og:title', content: articles.value ? articles.value[0].title : '' },
-    { property: 'og:description', content: articles.value ? articles.value[0].description : '' },
+    {
+      property: "og:title",
+      content: articles.value ? articles.value[0].title : "",
+    },
+    {
+      property: "og:description",
+      content: articles.value ? articles.value[0].description : "",
+    },
   ],
-})
+});
 </script>
 
-<style lang='sass' scoped>
+<style lang="sass" scoped>
 .test
   color: red
 </style>

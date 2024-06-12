@@ -1,7 +1,6 @@
 <template lang="pug">
 ClientOnly
   NuxtLayout
-    HomepageBreadCrumb
     .form-wrapper.w-75.py-12.ma-auto
       form
         v-text-field(v-model="state.title" :counter="10" :error-messages="v$.title.$errors.map(e => e.$message)" label="Title" required @blur="v$.title.$touch" @input="v$.title.$touch")
@@ -39,7 +38,6 @@ ClientOnly
 import { reactive } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
-import type { VAlert } from "vuetify/components";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import { indexStore } from "../../../../store/index";
 import type { Database } from "../../../../types/supabase";
@@ -70,18 +68,17 @@ const initialState = {
 const formSuccess = ref(false);
 const submitPopupOpen = ref(false);
 
-const openCalender = ref(false);
 const tagsList = ref<Database["public"]["Tables"]["tags"]["Row"][] | null>([]);
 const categoriesList = ref<
   Database["public"]["Tables"]["categories"]["Row"][] | null
 >([]);
 const selectedTags = ref<number[] | null>([]);
 const oldSelectedTags = ref<number[]>([]);
-const articleId = ref(route.params.id);
+// const articleId = ref(route.params.id);
 const state = reactive({
   ...initialState,
 });
-
+// @ts-ignore
 const addImage = (image: Image) => {
   store.selectedImage = image;
   store.openImagePopup = false;
@@ -96,10 +93,7 @@ watch(
     }
   }
 );
-const onDateSelected = (date: string) => {
-  const timestamp = new Date(date).getTime();
-  openCalender.value = false;
-};
+
 //監聽編輯器文字
 const handleContent = (content: string) => {
   if (!content === undefined) {
@@ -128,10 +122,6 @@ const categoryDataHandler = async () => {
   }
 };
 const articleDataHandler = async () => {
-  // const { data, error } = await supabase
-  //   .from('articles')
-  //   .select()
-  //   .eq('id', route.params.id)
   const filter: FilterCondition<"articles">[] = [
     { column: "id", operator: "eq", value: route.params.id },
   ];
@@ -246,7 +236,7 @@ onBeforeMount(async () => {
 });
 
 const v$ = useVuelidate(rules, state);
-
+// @ts-ignore
 const submitHandler = async () => {
   await v$.value.$validate();
   if (!v$.value.$error) {
@@ -270,25 +260,13 @@ const submitHandler = async () => {
       formSuccess.value = !error;
       submitPopupOpen.value = true;
       window.scrollTo({ top: 0, behavior: "smooth" });
-      console.log(
-        formSuccess.value,
-        "formSuccess",
-        submitPopupOpen.value,
-        "submitPopupOpen"
-      );
     } catch (e) {
       console.log(e);
     }
   }
 };
 
-const clear = () => {
-  v$.value.$reset();
-  for (const [key, value] of Object.entries(initialState)) {
-    (state as Record<string, typeof value>)[key] = value;
-  }
-};
-
+// @ts-ignore
 const cancel = () => {
   router.push("/admin/posts");
 };

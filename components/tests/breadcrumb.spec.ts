@@ -1,6 +1,6 @@
 import type { Mock } from "vitest";
 import BreadCrumb from "../homepage/BreadCrumb.vue";
-import { mount, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 
 vi.stubGlobal("useRoute", vi.fn());
 vi.stubGlobal("useRouter", vi.fn());
@@ -25,8 +25,6 @@ describe("BreadCrumb", () => {
         "v-icon": true,
       },
     });
-
-    // console.log(wrapper.vm.items,"~~");
     const expectedItems = [
       { title: "Home", href: "/", disabled: false },
       { title: "page1", href: "/page1", disabled: false },
@@ -70,7 +68,6 @@ describe("BreadCrumb", () => {
         { meta: { title: "page1" }, name: "page1", path: "/page1" },
         { meta: { title: "page2" }, name: "page2", path: "/page2" },
         { meta: { title: "page3" }, name: "page3", path: "/page3" },
-        // { meta: { title: "page4" }, name: "page4", path: "/page4" },
       ],
       params: {},
     };
@@ -84,7 +81,7 @@ describe("BreadCrumb", () => {
       { title: "page3", href: "/page3", disabled: true },
     ];
 
-    await nextTick(); // 确保反应系统已经处理了变化
+    await nextTick();
     expect((wrapper.vm as any).items).toEqual(newExpectedItems);
   });
 });

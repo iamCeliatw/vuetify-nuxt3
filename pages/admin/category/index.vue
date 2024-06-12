@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 ClientOnly
   NuxtLayout
     .button__container 
@@ -38,129 +38,141 @@ ClientOnly
       )
 </template>
 
-
-<script lang='ts' setup>
-import { onMounted } from 'vue';
-import type { Database } from '~/types/supabase';
+<script lang="ts" setup>
+import { onMounted } from "vue";
+import type { Database } from "~/types/supabase";
 import { useFetchApi } from "../../../composables/supabase-api";
 definePageMeta({
-  colorMode: 'light'
+  colorMode: "light",
 });
-const supabase = useSupabaseClient()
-const router = useRouter()
-const search = ref('')
-const headers = ref([
-  { text: 'name', value: 'name', title:'name'},
-  { text: 'actions', value: 'actions', sortable: false },
-])
-const { getData, deleteData } = useFetchApi();
 
-const categoryList = ref<Database['public']['Tables']['categories']['Row'][] | null>([])
+type ErrorMessage = {
+  text: string;
+  title: string;
+  visable: boolean;
+};
+
+const supabase = useSupabaseClient();
+const { getData, deleteData } = useFetchApi();
+const dialog = ref(false);
+const loading = ref(false);
+const isEditing = ref(false);
+const categoriesTable = supabase.from("categories");
+
+// @ts-ignore
+const headers = ref([
+  { text: "name", value: "name", title: "name" },
+  { text: "actions", value: "actions", sortable: false },
+]);
+
+const categoryList = ref<
+  Database["public"]["Tables"]["categories"]["Row"][] | null
+>([]);
 
 const categoriesDataHandler = async () => {
-  categoryList.value = await getData('categories')
-}
-const isEditing = ref(false)
-const editCategory = ref<Database['public']['Tables']['categories']['Row']>({
+  loading.value = true;
+  categoryList.value = await getData("categories");
+  loading.value = false;
+};
+
+const editCategory = ref<Database["public"]["Tables"]["categories"]["Row"]>({
   id: 0,
-  name: '',
-})
-const dialog =  ref(false)
-const loading = ref(false) 
-const categoryHandler = async () => {
-  loading.value = true
-  categoryList.value = await getData('categories')
-  loading.value = false
-}
-type ErrorMessage = {
-  text: string,
-  title: string,
-  visable: boolean,
-}
+  name: "",
+});
+
 const errorMessage = ref<ErrorMessage>({
-  text: '',
-  title: '',
+  text: "",
+  title: "",
   visable: false,
-})
-const addItem = async (item?:Database['public']['Tables']['categories']['Row']) => {
-  if (isEditing.value && item){
-    try{
-      const { error } = await supabase.from('categories').update({
-        name: editCategory.value.name,
-      }).eq('id', editCategory.value.id)
-      if(error?.code === '23505') {
-        errorMessage.value = {
-          text: 'category name already exists',
-          title: 'failed!',
-          visable: true,
-        }
-        // alert('Tag name already exists')
-        return
-      }
-    } catch(e) {
-      console.log('error:', e);
-    }
-  } else {
-    // console.log('正在創建');
-    try{ 
-      const { error } = await supabase.from('categories').insert({
-        name: editCategory.value.name,
-      })
-      if(error?.code === '23505') {
-        errorMessage.value = {
-          text: 'category name already exists',
-          title: 'failed!',
-          visable: true,
-        }
-        console.log(errorMessage.value, 'errorMessage');
-        // alert('Tag name already exists')
-        return
-      }
-    } catch(e) {
-      console.log('error:', e);
-    }
+});
+
+const handleDatabaseError = (error: any) => {
+  if (error?.code === "23505") {
+    errorMessage.value = {
+      text: "category name already exists",
+      title: "failed!",
+      visable: true,
+    };
+    console.log(errorMessage.value, "errorMessage");
+    return true;
   }
-  await categoriesDataHandler()
-  dialog.value = false
-  isEditing.value = false
+  return false;
+};
+
+// @ts-ignore
+const addItem = async (
+  item?: Database["public"]["Tables"]["categories"]["Row"]
+) => {
+  try {
+    let error;
+    if (isEditing.value && item) {
+      ({ error } = await categoriesTable
+        .update({
+          name: editCategory.value.name,
+        })
+        .eq("id", editCategory.value.id));
+    } else {
+      ({ error } = await categoriesTable.insert({
+        name: editCategory.value.name,
+      }));
+    }
+
+    if (handleDatabaseError(error)) {
+      return;
+    }
+  } catch (e) {
+    console.log("error:", e);
+  }
+
+  await categoriesDataHandler();
+  dialog.value = false;
+  isEditing.value = false;
   editCategory.value = {
     id: 0,
-    name: '',
-  }
-}
+    name: "",
+  };
+};
 
-const openEditPopup = (item:Database['public']['Tables']['categories']['Row']) => {
-  editCategory.value = { ...item }
-  isEditing.value = true
-  dialog.value = true
-}
-
-const deleteItem = async (item:Database['public']['Tables']['categories']['Row']) => {
-  try{
-    //先找出article_tag內 是否有tag_id
-    const { data, error } = await supabase.from('articles').select('category_id').eq('category_id', item.id)
-    if(data?.length){
+// @ts-ignore
+const openEditPopup = (
+  item: Database["public"]["Tables"]["categories"]["Row"]
+) => {
+  editCategory.value = { ...item };
+  isEditing.value = true;
+  dialog.value = true;
+};
+// @ts-ignore
+const deleteItem = async (
+  item: Database["public"]["Tables"]["categories"]["Row"]
+) => {
+  try {
+    const { data } = await supabase
+      .from("articles")
+      .select("category_id")
+      .eq("category_id", item.id);
+    if (data?.length) {
       errorMessage.value = {
-        text: 'This category is used in articles, please remove the category from the article first',
-        title: 'failed!',
+        text: "This category is used in articles, please remove the category from the article first",
+        title: "failed!",
         visable: true,
-        }
-      return
+      };
+      return;
     }
-    const filter:FilterCondition<'categories'>[] =  [{ column: 'id', operator: 'eq', value: item.id }];
-    await deleteData('categories', filter)
-    if(categoryList.value){
+    const filter: FilterCondition<"categories">[] = [
+      { column: "id", operator: "eq", value: item.id },
+    ];
+    await deleteData("categories", filter);
+    if (categoryList.value) {
       categoryList.value = categoryList.value?.filter((c) => c.id !== item.id);
     } else {
-      await categoriesDataHandler()
+      await categoriesDataHandler();
     }
-  }catch(e){
-    console.log('error:', e);
+  } catch (e) {
+    console.log("error:", e);
   }
-}
+};
 
-onMounted(async() => {
- await categoriesDataHandler()
-})
-
+onMounted(async () => {
+  await categoriesDataHandler();
+});
 </script>

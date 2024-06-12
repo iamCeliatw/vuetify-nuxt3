@@ -1,7 +1,7 @@
 <template lang="pug">
-.test 
-    HomepageBreadCrumb
-    
+.category__wrapper 
+  HomepageNavbar
+  HomepageBreadCrumb
 
 </template>
 

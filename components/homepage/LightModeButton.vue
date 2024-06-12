@@ -12,8 +12,8 @@
 
 <script lang="ts" setup>
 const colorMode = useColorMode();
+// @ts-ignore
 const changeMode = () => {
-  console.log(colorMode);
   colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
 };
 </script>

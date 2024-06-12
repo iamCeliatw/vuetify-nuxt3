@@ -92,15 +92,33 @@ export type Database = {
       categories: {
         Row: {
           id: number
-          name: string 
+          name: string | null
         }
         Insert: {
           id?: number
-          name: string
+          name?: string | null
         }
         Update: {
           id?: number
-          name: string
+          name?: string | null
+        }
+        Relationships: []
+      }
+      profile: {
+        Row: {
+          about: string | null
+          id: number
+          name: string | null
+        }
+        Insert: {
+          about?: string | null
+          id?: number
+          name?: string | null
+        }
+        Update: {
+          about?: string | null
+          id?: number
+          name?: string | null
         }
         Relationships: []
       }

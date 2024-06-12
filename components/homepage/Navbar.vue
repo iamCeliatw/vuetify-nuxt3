@@ -2,10 +2,10 @@
 nav.navbar__wrapper 
   .navbar__container
     .navbar__title 
-      //- p Celia's note
+      p Celia's note
     .button__section 
       ul.navigate__section
-        li(:class="{ 'active-route': router.currentRoute.value.path === nav.url }" v-for="nav in navigate" :key="nav", @click="() => router.push(nav.url)" ) {{ nav.name }}
+        li(:class="{ 'active-route': router.currentRoute.value.path === nav.url }" v-for="nav in navigate" :key="nav", @click="handleClick(nav)" ) {{ nav.name }}
       //- .github__icon 
       //-   img(src="/github.png")
       .light__button
@@ -13,14 +13,22 @@ nav.navbar__wrapper
 </template>
 
 <script lang="ts" setup>
-const colorMode = useColorMode()
-const router = useRouter()
-const navigate = ref([
-{ name: 'post', url: '/' },
-{ name: 'about', url: '/about' },
-{ name: 'category', url:'/category'}
-])
-
+type Nav = {
+  name: string;
+  url: string;
+};
+//@ts-ignore
+const router = useRouter();
+//@ts-ignore
+const navigate = ref<Nav>([
+  { name: "post", url: "/" },
+  { name: "about", url: "/about" },
+  { name: "category", url: "/category" },
+]);
+//@ts-ignore
+const handleClick = (nav: Nav) => {
+  window.location.href = nav.url;
+};
 </script>
 
 <style lang="sass" scoped>
@@ -58,7 +66,7 @@ const navigate = ref([
     line-height: 40px
     transition: all .2s
     &:hover
-      border-bottom: 2px solid 
+      border-bottom: 2px solid
     @include breakPoint(size-768 ,null)
       font-size: 16px
 .button__section
@@ -76,17 +84,16 @@ const navigate = ref([
     width: 100%
     height: 100%
     object-fit: cover
-.active-route 
+.active-route
   border-bottom: 2px solid
-.navbar__title 
+.navbar__title
   p
     font-size: 26px
     @include breakPoint(size-768 ,null)
       font-size: 20px
     @include breakPoint(size-512 ,null)
       display: none
-    // font-weight: 
-    // color: var(--text-color
+
 .light__button
   width: auto
 </style>

@@ -4,14 +4,14 @@ ClientOnly
     v-card.h-auto(title="Articles", flat)
       .button__container
         v-btn(color="primary" @click="addItem" prepend-icon="mdi-plus" class="text-none font-weight-regular" text="ADD" variant="tonal")
-      v-text-field(v-model="search", label="Search", prepend-inner-icon="mdi-magnify", variant="outlined", hide-details, single-line)
+      v-text-field(v-model="search", label="Search", v-if="!loading" prepend-inner-icon="mdi-magnify", variant="outlined", hide-details, single-line)
       v-data-table(:hover="true", :headers="headers", :items="articleList", :search="search"  v-if="!loading")
         template(v-slot:item.actions="{ item }")
           v-btn(small, color="primary" @click="editItem(item)" class="mr-4")
             | edit
           v-btn(small, color="error" @click="openDeleteDialog(item)")
             | delete
-      v-row(justify="center" align="center" v-if="loading")
+      v-row(justify="center" align="center" :style="{ height:'100px' }" v-if="loading")
         v-progress-circular(indeterminate :size="40")
       v-dialog(v-model="deleteDialog" width="auto")
         v-card(max-width="400" prepend-icon="mdi-update" text="Are you sure to delete this article?")
@@ -50,7 +50,7 @@ const headers = ref([
   { text: "Status", value: "status", title: "status" },
   { text: "actions", value: "actions", sortable: false },
 ]);
-const loading = ref(true);
+const loading = ref(false);
 const deleteDialog = ref(false);
 const articleList = ref<
   Database["public"]["Tables"]["articles"]["Row"][] | null
@@ -87,12 +87,10 @@ const selectedItem = ref<Database["public"]["Tables"]["articles"]["Row"]>();
 const openDeleteDialog = (
   item: Database["public"]["Tables"]["articles"]["Row"]
 ) => {
-  // 新增這個函數
   selectedItem.value = item;
   deleteDialog.value = true;
 };
 const deleteArticle = async () => {
-  console.log(selectedItem.value);
   if (selectedItem.value && articleList.value) {
     const filter: FilterCondition<"articles">[] = [
       { column: "id", operator: "eq", value: selectedItem.value.id },

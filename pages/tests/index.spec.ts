@@ -1,50 +1,57 @@
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
-import { mount, shallowMount } from '@vue/test-utils';
-import HomePage from '../index.vue';
-import { ref } from 'vue';
+import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
+import { shallowMount } from "@vue/test-utils";
+import HomePage from "../index.vue";
+import { ref } from "vue";
 
 // 模拟函数
 const mockUseColorMode = () => {
-  vi.stubGlobal('useColorMode', vi.fn(() => ({ value: 'dark' })));
+  vi.stubGlobal(
+    "useColorMode",
+    vi.fn(() => ({ value: "dark" }))
+  );
 };
-vi.stubGlobal('useHead', vi.fn(() => ({ title: 'Home' })))
+vi.stubGlobal(
+  "useHead",
+  vi.fn(() => ({ title: "Home" }))
+);
 const mockUseAsyncData = (data: any) => {
-  vi.stubGlobal('useAsyncData', vi.fn(() => ({
-    data: ref(data),
-    pending: ref(false),
-    error: ref(null),
-  })));
+  vi.stubGlobal(
+    "useAsyncData",
+    vi.fn(() => ({
+      data: ref(data),
+      pending: ref(false),
+      error: ref(null),
+    }))
+  );
 };
 
 const mockUseSupabaseClient = () => {
-  vi.stubGlobal('useSupabaseClient', vi.fn(() => ({
-    from: vi.fn(() => ({
-      select: vi.fn(() => Promise.resolve({ data: [], error: null })),
-    })),
-  })));
+  vi.stubGlobal(
+    "useSupabaseClient",
+    vi.fn(() => ({
+      from: vi.fn(() => ({
+        select: vi.fn(() => Promise.resolve({ data: [], error: null })),
+      })),
+    }))
+  );
 };
 
 const mockUseRouter = () => {
   const push = vi.fn();
-  const currentRoute = { value: { path: '/' } };
-  vi.stubGlobal('useRouter', () => ({
+  const currentRoute = { value: { path: "/" } };
+  vi.stubGlobal("useRouter", () => ({
     push,
     currentRoute,
   }));
   return { push, currentRoute };
 };
 
-// const mockUseRoute = () => {
-//   const params = vi.fn(() => ({ id: 1 }));
-//   vi.stubGlobal('useRoute', () => ({ params }));
-// }
-
-vi.mock('@nuxtjs/composition-api', () => ({
+vi.mock("@nuxtjs/composition-api", () => ({
   useAsyncData: vi.fn(),
-  useColorMode: vi.fn(() => ({ preference: 'light' })),
+  useColorMode: vi.fn(() => ({ preference: "light" })),
 }));
 
-vi.mock('@supabase/auth-helpers-vue', () => ({
+vi.mock("@supabase/auth-helpers-vue", () => ({
   useSupabaseClient: vi.fn(() => ({
     from: vi.fn(() => ({
       select: vi.fn(),
@@ -52,11 +59,11 @@ vi.mock('@supabase/auth-helpers-vue', () => ({
   })),
 }));
 
-vi.mock('vue-router', () => ({
+vi.mock("vue-router", () => ({
   useRouter: vi.fn(),
 }));
 
-describe('HomePage', () => {
+describe("HomePage", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     mockUseColorMode();
@@ -66,28 +73,45 @@ describe('HomePage', () => {
     // mockUseRoute();
   });
 
-  it('should render correctly', () => {
+  it("should render correctly", () => {
     const wrapper = shallowMount(HomePage, {
       stubs: {
         HomepageNavbar: true,
         HomepageMainSection: {
           template: '<div class="mock-main-section"></div>',
-          props: ['articles', 'pending', 'error']
+          props: ["articles", "pending", "error"],
         },
         HomepageMessageBoard: true,
-        HomepageBreadCrumb:  {
+        HomepageBreadCrumb: {
           template: '<div class="bread-crumb"></div>',
         },
-      }
+      },
     });
   });
 
-  it('shows articles when loaded', async () => {
+  it("shows articles when loaded", async () => {
     const articlesData = [
-      { id: 1, category_id:1, status:1, content:'<h2>在Nuxt3中動態設定Layout</h2>', description: 'test', key:'nuxt', title: 'Article 1', publish_date: '2024-05-05T00:00:00' },
-      { id: 2, category_id:1, status:1, content:'<h2>在Nuxt3中動態設定Layout</h2>', description: 'test', key:'nuxt', title: 'Article 1', publish_date: '2024-05-05T00:00:00' },
+      {
+        id: 1,
+        category_id: 1,
+        status: 1,
+        content: "<h2>在Nuxt3中動態設定Layout</h2>",
+        description: "test",
+        key: "nuxt",
+        title: "Article 1",
+        publish_date: "2024-05-05T00:00:00",
+      },
+      {
+        id: 2,
+        category_id: 1,
+        status: 1,
+        content: "<h2>在Nuxt3中動態設定Layout</h2>",
+        description: "test",
+        key: "nuxt",
+        title: "Article 1",
+        publish_date: "2024-05-05T00:00:00",
+      },
     ];
-    // Mock useAsyncData 返回值
     (useAsyncData as unknown as Mock).mockReturnValueOnce({
       data: ref(articlesData),
       pending: ref(false),
@@ -99,16 +123,16 @@ describe('HomePage', () => {
         HomepageNavbar: true,
         HomepageMainSection: {
           template: '<div class="mock-main-section"></div>',
-          props: ['articles', 'pending', 'error']
+          props: ["articles", "pending", "error"],
         },
         HomepageMessageBoard: true,
         HomepageBreadCrumb: true,
-      }
+      },
     });
     await wrapper.vm.$nextTick();
 
-    const mainSection = wrapper.findComponent({ name: 'MainSection' });
+    const mainSection = wrapper.findComponent({ name: "MainSection" });
     expect(mainSection.exists()).toBe(true);
-    expect(mainSection.props('articles')).toEqual(articlesData);
+    expect(mainSection.props("articles")).toEqual(articlesData);
   });
 });

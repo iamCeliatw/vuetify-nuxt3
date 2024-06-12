@@ -3,41 +3,30 @@ HomepageNavbar
 HomepageBreadCrumb
 HomepageMainSection(:articles="articles" :pending="pending" :error="error")
 HomepageMessageBoard
-
 </template>
 
 <script setup lang="ts">
-// import { indexStore } from '../store/index'
-import type { Database } from '../types/supabase'
-const colorMode = useColorMode()
-const supabase = useSupabaseClient()
-const articleList = ref<
-  Database['public']['Tables']['articles']['Row'][] | null
->([])
-const router = useRouter()
+const supabase = useSupabaseClient();
 const {
   data: articles,
   pending,
   error,
   refresh,
-} = useAsyncData('articlesData', async () => {
-  const { data, error } = await supabase.from('articles').select()
-
+} = useAsyncData("articlesData", async () => {
+  const { data, error } = await supabase.from("articles").select();
   if (error) {
-    console.error('Failed to fetch articles:', error.message)
-    throw error
+    console.error("Failed to fetch articles:", error.message);
+    throw error;
   }
-  return data
-})
+  return data;
+});
 useHead({
   title: `文章 - Celia's blog`,
   meta: [
-    {
-      name: 'description',
-      content: 'This is the home page of the website.',
-    },
+    { property: "og:title", content: `Celia's blog` },
+    { property: "og:description", content: "前端的隨筆紀錄" },
   ],
-})
+});
 </script>
 
 <style lang="sass" scoped>

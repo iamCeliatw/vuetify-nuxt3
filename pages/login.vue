@@ -29,6 +29,7 @@ const email = ref("");
 const password = ref("");
 const showError = ref(false);
 const errorMessage = ref<string | undefined>("");
+// @ts-ignore
 const signInWithEmail = async () => {
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email.value,
@@ -36,7 +37,6 @@ const signInWithEmail = async () => {
   });
   if (data?.user) router.push("/admin");
   if (error) {
-    console.log(error);
     showError.value = true;
     errorMessage.value = error.message;
   }
@@ -71,12 +71,10 @@ onMounted(async () => {
   gap: 10px
   h3
     text-align: center
-    // color: #696969
   input
     padding: 5px 10px
     border: 1px solid #ffffffaa
     border-radius: 5px
-    // border: none
     &:focus
       outline: none
   button

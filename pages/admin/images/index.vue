@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 ClientOnly
   NuxtLayout
     .button__container
@@ -15,91 +15,89 @@ ClientOnly
           | delete
 </template>
 
-<script lang='ts' setup>
-const supabase = useSupabaseClient()
+<script lang="ts" setup>
+const supabase = useSupabaseClient();
 definePageMeta({
-  colorMode: 'light'
+  colorMode: "light",
 });
-const STORAGE_BUCKET = 'article';
+const STORAGE_BUCKET = "article";
 type Image = {
-  image: string,
-  name: string
-}
-const loading = ref(true)
-const imagesList = ref<Image[]>([])
-  const headers = ref([
-  { text: 'image', value: 'image', title:'Image',sortable: false},
-  { text: 'actions', value: 'actions', sortable: false },
-])
+  image: string;
+  name: string;
+};
+const loading = ref(true);
+const imagesList = ref<Image[]>([]);
+// @ts-ignore
+const headers = ref([
+  { text: "image", value: "image", title: "Image", sortable: false },
+  { text: "actions", value: "actions", sortable: false },
+]);
 
 const imageHandler = async () => {
-  loading.value = true
-  imagesList.value = []
-  const { data, error } = await supabase.storage
-    .from('article')
-    .list();
+  loading.value = true;
+  imagesList.value = [];
+  const { data, error } = await supabase.storage.from("article").list();
   if (error) {
-    console.log('Error listing files:', error.message);
+    console.log("Error listing files:", error.message);
   }
-  if(data?.length){
-    data.forEach(async(file) => {
-      const { data: fileData} = supabase.storage.from('article').getPublicUrl(file.name);
-      if(fileData){
-        imagesList.value.push({image: fileData.publicUrl, name: file.name})
+  if (data?.length) {
+    data.forEach(async (file) => {
+      const { data: fileData } = supabase.storage
+        .from("article")
+        .getPublicUrl(file.name);
+      if (fileData) {
+        imagesList.value.push({ image: fileData.publicUrl, name: file.name });
       }
     });
-    loading.value = false
+    loading.value = false;
   }
-}
-const selectedFile = ref<File | null>(null);
-
+};
+// const selectedFile = ref<File | null>(null);
+// @ts-ignore
 const uploadFile = async (event: Event): Promise<void> => {
   const input = event.target as HTMLInputElement;
   if (!input.files?.length) return;
 
   const file = input.files[0];
-  const { data, error } = await supabase
-  .storage
-  .from(STORAGE_BUCKET)
-  .upload(`${file.name}`, file, {
-    cacheControl: '3600',
-    upsert: false
-  })
-  if (error){
-    console.log(error)
-    alert(`error:,${error.message}`)
-  } 
+  const { error } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .upload(`${file.name}`, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+  if (error) {
+    console.log(error);
+    alert(`error:,${error.message}`);
+  }
   await imageHandler();
-}
+};
 
 onBeforeMount(async () => {
   await imageHandler();
-})
-
-const deleteItem = async (item:Image) => {
-  // console.log(item, 'deleteItem');
-  const { data, error } =  await supabase
-  .storage
-  .from(STORAGE_BUCKET)
-  .remove([item.name]);
-  if(error){
-    console.log('error:', error);
-    return
+});
+// @ts-ignore
+const deleteItem = async (item: Image) => {
+  const { error } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .remove([item.name]);
+  if (error) {
+    console.log("error:", error);
+    return;
   }
-  imagesList.value = imagesList.value.filter((image) => image.name !== item.name)
-}
-
-
+  imagesList.value = imagesList.value.filter(
+    (image) => image.name !== item.name
+  );
+};
 </script>
 
-<style lang='sass' scoped>
-.file 
+<style lang="sass" scoped>
+.file
   position: absolute
   opacity: 0
   overflow: hidden
   width: 66px
   height: 36px
-.image 
+.image
   object-fit: cover
   width: auto
   height:  auto

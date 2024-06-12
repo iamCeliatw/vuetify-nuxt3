@@ -147,7 +147,6 @@ const submitHandler = async () => {
       submitPopupOpen.value = true;
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (data) {
-        // console.log(data[0].id,"返回文章資訊");
         selectedTags.value?.forEach(async (tag_id) => {
           await supabase.from("article_tag").insert({
             article_id: data[0].id,
@@ -156,9 +155,7 @@ const submitHandler = async () => {
           });
         });
       }
-    } catch (e) {
-      // console.log(e);
-    }
+    } catch (e) {}
   } else {
     console.log(`error:${v$.value.$error}`);
   }
