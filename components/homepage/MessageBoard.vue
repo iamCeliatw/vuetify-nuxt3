@@ -1,28 +1,15 @@
 <template lang="pug">
 section.github__messageboard
-  Giscus(
-      id="comments"
-      repo="iamCeliatw/vuetify-nuxt3"
-      repoId="R_kgDOLnHWQQ"
-      category="Announcements"
-      categoryId="DIC_kwDOLnHWQc4Cet3_"
-      mapping="pathname"
-      strict="0"
-      reactionsEnabled="1"
-      emitMetadata="0"
-      inputPosition="bottom"
-      :theme="theme"
-      lang="zh-TW"
-      loading="lazy")
+  LazyHomepageTheGiscus 
 </template>
 <script setup lang="ts">
 // @ts-ignore
-import Giscus from "@giscus/vue";
+// import Giscus from '@giscus/vue'
 //出處：
 //https://giscus.app/zh-TW
-const colorMode = useColorMode();
+const colorMode = useColorMode()
 // @ts-ignore
-const theme = computed(() => `${colorMode.value}_protanopia`);
+const theme = computed(() => `${colorMode.value}_protanopia`)
 </script>
 
 <style lang="sass" scoped>
