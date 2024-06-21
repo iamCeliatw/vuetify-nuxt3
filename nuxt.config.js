@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     '@zadigetvoltaire/nuxt-gtm',
     'nuxt-gtag',
     '@nuxtjs/sitemap',
+    ['@nuxtjs/robots', { configPath: '~/robots.config' }],
   ],
   sitemap: {
     hostname: 'https://celia-blog.vercel.app/',
