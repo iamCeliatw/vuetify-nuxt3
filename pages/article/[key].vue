@@ -9,9 +9,7 @@ section.article__wrapper
 import type { Database } from "~/types/supabase";
 
 const supabase = useSupabaseClient();
-// const articleList = ref<
-//   Database["public"]["Tables"]["articles"]["Row"][] | null
-// >([]);
+
 const route = useRoute();
 const fetchArticles = async (key: string[] | string) => {
   const { data, error } = await supabase

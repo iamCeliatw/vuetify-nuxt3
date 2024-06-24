@@ -11,7 +11,7 @@ ClientOnly
               v-row(dense)
                 v-col(cols="14" md="4" sm="6")
                   v-text-field(label="name*" v-model="editCategory.name" required)
-              small.text-caption.text-medium-emphasis *indicates required field
+              small.text-caption.text-medium-emphasis {{ '*indicates required field' }}
             v-divider
             v-card-actions
               v-spacer
@@ -24,9 +24,9 @@ ClientOnly
         span(alt="tag", height="100")
       template(v-slot:item.actions="{ item }")
         v-btn(small, color="primary" @click="openEditPopup(item)" class="mr-4")
-          | edit
+          | {{ 'edit' }}
         v-btn(small, color="error" @click="deleteItem(item)")
-          | delete
+          | {{ 'delete' }}
     .alert__popup
       v-alert(
         closable

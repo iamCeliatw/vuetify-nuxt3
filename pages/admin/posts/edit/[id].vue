@@ -201,8 +201,7 @@ const updateArticleTags = async (articleId: number, newTags: number[]) => {
 };
 
 const changeDate = (date: string | null) => {
-  const date_result = new Date(String(date));
-  return date_result.toISOString().split("T")[0];
+  return date?.split("T")[0];
 };
 
 const imageHandler = async () => {

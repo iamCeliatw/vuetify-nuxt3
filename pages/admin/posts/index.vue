@@ -39,27 +39,37 @@ import {
 definePageMeta({
   colorMode: "light",
 });
-const supabase = useSupabaseClient();
+
+interface ProcessedArticle {
+  id: number;
+  title: string;
+  content: string;
+  category: string;
+  publish_date: string | null; // 已經格式化為字符串
+  status: "Published" | "Draft"; // 狀態已被轉換為字符串
+}
+type ErrorMessage = {
+  text: string;
+  title: string;
+  visable: boolean;
+};
+
 const router = useRouter();
 const search = ref("");
 const { getData, deleteData } = useFetchApi();
 const headers = ref([
   { text: "Title", value: "title", title: "title" },
-  { text: "Category", value: "category_id", title: "category" },
+  { text: "Category", value: "category", title: "category" },
   { text: "Publish_date", value: "publish_date", title: "publish date" },
   { text: "Status", value: "status", title: "status" },
   { text: "actions", value: "actions", sortable: false },
 ]);
 const loading = ref(false);
 const deleteDialog = ref(false);
-const articleList = ref<
-  Database["public"]["Tables"]["articles"]["Row"][] | null
+const categoryList = ref<
+  Database["public"]["Tables"]["categories"]["Row"][] | null
 >([]);
-type ErrorMessage = {
-  text: string;
-  title: string;
-  visable: boolean;
-};
+
 const errorMessage = ref<ErrorMessage>({
   text: "",
   title: "",
@@ -72,18 +82,49 @@ const addItem = () => {
 const editItem = (item: { id: number }) => {
   router.push(`/admin/posts/edit/${item.id}`);
 };
+const selectedItem = ref<
+  Database["public"]["Tables"]["articles"]["Row"] | null
+>(null);
+const articleList = ref<ProcessedArticle[] | null>([]);
 
 const articleDataHandler = async () => {
   loading.value = true;
-  articleList.value = await getData("articles");
-  articleList.value?.sort(
-    (a, b) =>
-      new Date(b.publish_date ? b.publish_date : Date.now()).getTime() -
-      new Date(a.publish_date ? a.publish_date : Date.now()).getTime()
-  );
+  const rawArticleList = await getData("articles");
+  if (rawArticleList) {
+    const processedArticles: ProcessedArticle[] = rawArticleList.map(
+      (article) => {
+        const category =
+          categoryList.value?.find(
+            (category) => category.id === article.category_id
+          )?.name || "";
+
+        return {
+          id: article.id,
+          title: article.title || "",
+          content: article.content || "",
+          publish_date: date_format(article.publish_date) || null,
+          category: category,
+          status: article.status ? "Published" : "Draft",
+        };
+      }
+    );
+    processedArticles.sort(
+      (a, b) =>
+        new Date(b.publish_date ? b.publish_date : Date.now()).getTime() -
+        new Date(a.publish_date ? a.publish_date : Date.now()).getTime()
+    );
+    articleList.value = processedArticles;
+  } else {
+    articleList.value = null;
+  }
   loading.value = false;
 };
-const selectedItem = ref<Database["public"]["Tables"]["articles"]["Row"]>();
+
+const date_format = (date: string | null) => {
+  if (!date) return;
+  return new Date(date).toLocaleDateString();
+};
+
 const openDeleteDialog = (
   item: Database["public"]["Tables"]["articles"]["Row"]
 ) => {
@@ -114,7 +155,16 @@ const deleteArticle = async () => {
     }
   }
 };
+const categoryDataHandler = async () => {
+  try {
+    categoryList.value = await getData("categories");
+    console.log(categoryList.value);
+  } catch (e) {
+    console.log("error:", e);
+  }
+};
 onMounted(async () => {
+  await categoryDataHandler();
   await articleDataHandler();
 });
 </script>

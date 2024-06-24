@@ -5,18 +5,16 @@
       p {{ articleData.title }}
       p {{ formatDate(articleData.publish_date) }}
       .count__container
-        img(src="/eyes.png" alt="tag", height="100") 
+        img(src="/images/eyes.png" alt="tag", height="100") 
         span.article__count view: {{ articleData.count }}
-    section.article__content
-      .article__content--main 
-        //- p.description(v-html="articleData.description")
-        ClientOnly
+    ClientOnly
+      section.article__content
+        .article__content--main 
           p.content(v-html="articleData.content")
-      .article__content--info 
-        .article__outline
-          p.outline__title 大綱
-          p(v-for="h2 in h2Array") {{ h2 }}
-        ClientOnly
+        .article__content--info 
+          .article__outline
+            p.outline__title 大綱
+            p(v-for="h2 in h2Array") {{ h2 }}
           .article__tags
             span.tag(v-for="tag in articletagList" :key="tag.id") {{ tag.name }}
 </template>

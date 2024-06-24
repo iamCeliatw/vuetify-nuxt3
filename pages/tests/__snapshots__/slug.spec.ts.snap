@@ -6,14 +6,14 @@ exports[`Slug > renders correctly 1`] = `
     <div data-v-575d0b4c="" class="noPage__container">
       <h1 data-v-575d0b4c="">404</h1>
     </div>
-    <div data-v-575d0b4c="" class="planet"><img data-v-575d0b4c="" src="/planet.png"></div>
-    <div data-v-575d0b4c="" class="alien"><img data-v-575d0b4c="" src="/alien.png"></div>
+    <div data-v-575d0b4c="" class="planet"><img data-v-575d0b4c="" src="/images/planet.png"></div>
+    <div data-v-575d0b4c="" class="alien"><img data-v-575d0b4c="" src="/images/alien.png"></div>
     <div data-v-575d0b4c="" class="not_found">
       <div data-v-575d0b4c="" class="text">
         <h1 data-v-575d0b4c="" class="title">404</h1>
         <p data-v-575d0b4c="">page not found</p>
       </div>
-      <div data-v-575d0b4c="" class="back_page"><img data-v-575d0b4c="" src="/arrow-back.png">
+      <div data-v-575d0b4c="" class="back_page"><img data-v-575d0b4c="" src="/images/arrow-back.png">
         <router-link data-v-575d0b4c="" to="/">Go to homepage</router-link>
       </div>
     </div>

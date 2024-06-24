@@ -7,7 +7,7 @@ nav.navbar__wrapper
       ul.navigate__section
         li(:class="{ 'active-route': router.currentRoute.value.path === nav.url }" v-for="nav in navigate" :key="nav", @click="handleClick(nav)" ) {{ nav.name }}
       //- .github__icon 
-      //-   img(src="/github.png")
+      //-   img(src="/images/github.png")
       .light__button
         HomepageLightModeButton
 </template>

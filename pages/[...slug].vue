@@ -4,25 +4,25 @@ NuxtLayout
     .noPage__container
       h1 404
     .planet
-      img(src="/planet.png")
+      img(src="/images/planet.png")
     .alien
-      img(src="/alien.png")
+      img(src="/images/alien.png")
     .not_found
       .text
         h1.title 404
         p page not found
       .back_page
-        img(src="/arrow-back.png")
+        img(src="/images/arrow-back.png")
         router-link(to="/") Go to homepage
 </template>
 
 <script lang="ts" setup>
 definePageMeta({
   layout: false,
-})
-const route = useRoute()
-if (route.params.slug[0] == 'admin') {
-  setPageLayout('default')
+});
+const route = useRoute();
+if (route.params.slug[0] == "admin") {
+  setPageLayout("default");
 }
 </script>
 
@@ -43,7 +43,7 @@ if (route.params.slug[0] == 'admin') {
     left: 0
     width: 100%
     height: 100%
-    background-image: url('/stars.png')
+    background-image: url('/images/stars.png')
     background-size: cover
     background-position: center
     z-index: -1
