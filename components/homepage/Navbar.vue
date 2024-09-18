@@ -1,7 +1,7 @@
 <template lang="pug">
 nav.navbar__wrapper 
   .navbar__container
-    .navbar__title 
+    .navbar__title(@click="() => router.push('/')")
       p Celia's note
     .button__section 
       ul.navigate__section
@@ -14,21 +14,21 @@ nav.navbar__wrapper
 
 <script lang="ts" setup>
 type Nav = {
-  name: string;
-  url: string;
-};
+  name: string
+  url: string
+}
 //@ts-ignore
-const router = useRouter();
+const router = useRouter()
 //@ts-ignore
 const navigate = ref<Nav>([
-  { name: "post", url: "/" },
-  { name: "about", url: "/about" },
-  { name: "category", url: "/category" },
-]);
+  { name: 'post', url: '/' },
+  { name: 'about', url: '/about' },
+  { name: 'category', url: '/category' },
+])
 //@ts-ignore
 const handleClick = (nav: Nav) => {
-  window.location.href = nav.url;
-};
+  router.push(`${nav.url}`)
+}
 </script>
 
 <style lang="sass" scoped>
