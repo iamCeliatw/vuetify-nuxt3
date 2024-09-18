@@ -64,11 +64,11 @@ watchEffect(() => {
     articlesByYear.value = articlesArray
   }
 })
-
+const router = useRouter()
 // @ts-ignore
 const goToArticle = (key: string) => {
   console.log(key)
-  window.location.href = `/article/${key}`
+  router.push(`/article/${key}`)
 }
 // @ts-ignore
 const dateFormat = (originalDate: string | number | Date) => {

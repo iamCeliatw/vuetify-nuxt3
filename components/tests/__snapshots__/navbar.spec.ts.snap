@@ -3,7 +3,9 @@
 exports[`Navbar > should render correctly 1`] = `
 "<nav data-v-0e20c101="" class="navbar__wrapper">
   <div data-v-0e20c101="" class="navbar__container">
-    <div data-v-0e20c101="" class="navbar__title"></div>
+    <div data-v-0e20c101="" class="navbar__title">
+      <p data-v-0e20c101="">Celia's note</p>
+    </div>
     <div data-v-0e20c101="" class="button__section">
       <ul data-v-0e20c101="" class="navigate__section">
         <li data-v-0e20c101="" class="active-route">post</li>

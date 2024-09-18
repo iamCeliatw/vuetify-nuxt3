@@ -101,7 +101,7 @@ onMounted(async () => {
       const customButton = document.createElement("span");
       const imageHTML = `
         <div class="custom-button">
-          <img src="/edit.png"></img>
+          <img src="/images/edit.png"></img>
         </div>`;
       customButton.classList.add("ql-formats");
       customButton.innerHTML = imageHTML;

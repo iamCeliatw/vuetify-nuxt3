@@ -10,10 +10,12 @@ const mockUseColorMode = () => {
     vi.fn(() => ({ value: "dark" }))
   );
 };
-vi.stubGlobal(
-  "useHead",
-  vi.fn(() => ({ title: "Home" }))
-);
+const mockUseHead = () => {
+  vi.stubGlobal(
+    "useHead",
+    vi.fn(() => ({ title: "Home" }))
+  );
+};
 const mockUseAsyncData = (data: any) => {
   vi.stubGlobal(
     "useAsyncData",
@@ -70,7 +72,7 @@ describe("HomePage", () => {
     mockUseAsyncData([]);
     mockUseSupabaseClient();
     mockUseRouter();
-    // mockUseRoute();
+    mockUseHead();
   });
 
   it("should render correctly", () => {

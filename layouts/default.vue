@@ -5,8 +5,8 @@ v-layout.rounded.rounded-md
     v-toolbar-title {{ "Admin" }}
     v-spacer
     v-btn(@click="signOut")
-      img(src="/logout.png" alt="")
-  v-navigation-drawer(v-model="drawer")
+      img(src="/images/logout.png" alt="")
+  v-navigation-drawer(v-model="drawer" permanent)
     v-divider
     v-list-item.list-item.my-2(@click="() => router.push('/admin/profile')" title="profile")
     v-list-item.list-item.my-2(@click="() => router.push('/admin/posts')" title="post")

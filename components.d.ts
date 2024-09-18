@@ -10,6 +10,7 @@ declare module 'vue' {
     AdminAlertPopup: typeof import('./components/admin/AlertPopup.vue')['default']
     AdminEditor: typeof import('./components/admin/Editor.vue')['default']
     HomepageBreadCrumb: typeof import('./components/homepage/BreadCrumb.vue')['default']
+    HomepageCategorySection: typeof import('./components/homepage/CategorySection.vue')['default']
     HomepageContent: typeof import('./components/homepage/Content.vue')['default']
     HomepageLightModeButton: typeof import('./components/homepage/LightModeButton.vue')['default']
     HomepageMainSection: typeof import('./components/homepage/mainSection.vue')['default']
