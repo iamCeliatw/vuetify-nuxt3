@@ -23,7 +23,7 @@ const router = useRouter()
 const navigate = ref<Nav>([
   { name: 'post', url: '/' },
   { name: 'about', url: '/about' },
-  { name: 'category', url: '/category' },
+  // { name: 'category', url: '/category' },
 ])
 //@ts-ignore
 const handleClick = (nav: Nav) => {
