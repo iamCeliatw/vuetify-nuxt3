@@ -77,6 +77,11 @@ export default defineNuxtConfig({
           name: 'google-site-verification',
           content: 'RxsAX-B4Wx58KvSm9bLHxM7AwMSsw3SvJnwoSrcgg1I',
         },
+        {
+          property: 'og:image',
+          content:
+            'https://celia-portfolio-website.vercel.app/project/project_3.jpg',
+        },
       ],
       link: [{ rel: 'canonical', href: 'https://celia-blog.vercel.app/' }],
       script: [],
